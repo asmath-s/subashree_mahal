@@ -1,0 +1,66 @@
+{
+  "name": "sbs-track",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@emotion/react": "^11.9.3",
+    "@emotion/styled": "^11.9.3",
+    "@garage-panda/react-pdf-export": "^0.2.2",
+    "@mui/material": "^5.8.7",
+    "@react-pdf/renderer": "^2.3.0",
+    "@testing-library/jest-dom": "^5.16.4",
+    "@testing-library/react": "^13.3.0",
+    "@testing-library/user-event": "^13.5.0",
+    "bootstrap": "^5.2.0",
+    "chart.js": "^3.9.1",
+    "firebase": "^9.9.0",
+    "jspdf": "^2.5.1",
+    "jspdf-autotable": "^3.5.25",
+    "moment": "^2.29.4",
+    "rc-progress": "^3.4.0",
+    "react": "^18.2.0",
+    "react-awesome-calendar": "^1.0.14",
+    "react-bootstrap": "^2.4.0",
+    "react-chartjs-2": "^4.3.1",
+    "react-datepicker": "^4.8.0",
+    "react-dom": "^18.2.0",
+    "react-export-table-to-excel": "^1.0.6",
+    "react-feather": "^2.0.10",
+    "react-pro-sidebar": "^0.7.1",
+    "react-router-dom": "^6.3.0",
+    "react-scripts": "5.0.1",
+    "react-select": "^5.4.0",
+    "react-to-pdf": "^0.0.14",
+    "react-year-picker": "^0.3.7",
+    "stars-rating": "^1.1.0",
+    "stream-browserify": "^3.0.0",
+    "sweetalert2-react": "^0.8.3",
+    "uuid": "^8.3.2",
+    "web-vitals": "^2.1.4"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "prod": "firebase deploy --only hosting:sri-subasree-mahal-tracking-system"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}

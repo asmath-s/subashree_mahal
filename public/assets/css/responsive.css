@@ -1,0 +1,90 @@
+@media screen and (max-width: 1400px) {
+  #page-topbar {
+    left: 0px;
+  }
+  .main-content {
+    margin-left: 0px;
+  }
+  .app-menu {
+    margin-left: -100%;
+  }
+  .navenabled .app-menu {
+    margin-left: 0;
+    z-index: 1004;
+  }
+
+  .navenabled .vertical-overlay {
+    display: block;
+  }
+  #topnav-hamburger-icon {
+    display: block;
+  }
+}
+@media screen and (max-width: 991px) {
+  .chartspace {
+    margin-bottom: 20px;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .yearlyMonth {
+    display: inline-block !important;
+    float: left !important;
+    height: 300px !important;
+    padding: 20px !important;
+    box-sizing: border-box !important;
+    width: 100% !important;
+  }
+  .calendarHeader .thickText {
+    font-size: 15px;
+  }
+  .calendarHeaderButtons {
+    overflow: initial !important;
+    display: flex;
+  }
+  .calendarHeader .thinText {
+    font-size: 15px;
+  }
+  .picker-panel {
+    position: absolute;
+    top: 40px !important;
+    left: 0px !important;
+    width: 240px;
+    height: 220px;
+    box-shadow: 0 2px 8px rgb(0 0 0 / 15%);
+    border-radius: 4px;
+    background-color: white;
+    transition: all 0.3s;
+  }
+}
+@media screen and (max-width: 520px) {
+  .inputfieldsitem:nth-child(1) {
+    width: 100%;
+  }
+  .inputfieldsitem:nth-child(2) {
+    margin-left: 0px;
+    margin-top: 10px;
+    margin-bottom: 5px;
+    width: 100%;
+  }
+  .mitem {
+    display: flex;
+    gap: 0px;
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .maintenacedetails {
+    display: flex;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: row;
+    flex-direction: column;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: flex-start;
+    -ms-flex-item-align: stretch;
+    align-self: stretch;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+}
