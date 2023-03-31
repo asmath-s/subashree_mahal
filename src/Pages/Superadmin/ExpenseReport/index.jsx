@@ -692,7 +692,6 @@ const ExpenseReport = () => {
             <div className="col-lg-12 ">
               <div className="backcard">
                 <div className="exprtbtn">
-                  {" "}
                   <DownloadTableExcel
                     filename="Expense Report"
                     sheet="users"
@@ -706,8 +705,7 @@ const ExpenseReport = () => {
                         border: "1px solid #0a408f",
                       }}
                     >
-                      {" "}
-                      Export Excel{" "}
+                      Export Excel
                     </button>
                   </DownloadTableExcel>
                   <button
@@ -719,7 +717,6 @@ const ExpenseReport = () => {
                     }}
                     onClick={() => exportPDF()}
                   >
-                    {" "}
                     Export PDF
                   </button>
                 </div>
@@ -729,8 +726,7 @@ const ExpenseReport = () => {
                     <div className="row ">
                       <div className="col-lg-8 maintenacedetails ">
                         <Form.Label>
-                          {" "}
-                          Please select the{" "}
+                          Please select the
                           <span className="redtext">year</span>
                         </Form.Label>
                         <YearPicker

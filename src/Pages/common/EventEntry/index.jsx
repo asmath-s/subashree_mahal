@@ -176,14 +176,13 @@ const EventEntry = () => {
   };
 
   // calculation of electricity cost
-  const calculateunit = (startunit, endunit, chargeunit, constunit) => {
-    if (startunit && endunit && chargeunit && constunit) {
-      const sum1 = constunit * startunit;
-      const sum2 = constunit * endunit;
-      const sum3 = sum2 - sum1;
-      console.log(sum3);
+  const calculateunit = (startunit, endunit, chargeunit) => {
+    if (startunit && endunit && chargeunit) {
+      const sum3 = endunit - startunit;
+
       setTotalunit(sum3);
       const total = sum3 * chargeunit;
+
       setMetercost(total);
     }
   };

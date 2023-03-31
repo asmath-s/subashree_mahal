@@ -379,7 +379,8 @@ export default function BookingEntry() {
                     <div className="col-lg-9 inputfields">
                       {Inputfields.map((Inputfield, index) => (
                         <div className="inputfields" key={index}>
-                          <div className="inputfieldsitem ">
+                          <div className="inputfieldsitem">
+                            <p>Room:</p>
                             <Form.Select
                               defaultValue=""
                               name="room"
@@ -401,6 +402,7 @@ export default function BookingEntry() {
                           </div>
                           {showrm === true ? (
                             <div className="inputfieldsitem">
+                              <p>₹:</p>
                               <Form.Control
                                 name="roomcost"
                                 type="text"
@@ -414,16 +416,10 @@ export default function BookingEntry() {
                             ""
                           )}
 
-                          <div
-                            className="inputfieldsitem"
-                            onClick={() => handleAddfields()}
-                          >
+                          <div onClick={() => handleAddfields()}>
                             <i className="fas fa-plus-circle"></i>
                           </div>
-                          <div
-                            className="inputfieldsitem"
-                            onClick={() => handleRemovefields(index)}
-                          >
+                          <div onClick={() => handleRemovefields(index)}>
                             <i className="fas fa-minus-circle"></i>
                           </div>
                         </div>
@@ -432,7 +428,12 @@ export default function BookingEntry() {
                   </div>
 
                   <FormnumComp
-                    label={"Rental Amount"}
+                    label={
+                      <div>
+                        <span>Rental Amount&nbsp;</span>
+                        <span style={{ color: "red" }}>₹</span>
+                      </div>
+                    }
                     type={"number"}
                     placeholder={"Enter Rental Amount"}
                     value={rentalamnt}
@@ -446,7 +447,12 @@ export default function BookingEntry() {
                     <div className="col-lg-9">{totalamnt}</div>
                   </div>
                   <FormnumComp
-                    label={"Advance Amount"}
+                    label={
+                      <div>
+                        <span>Advance Amount&nbsp;</span>
+                        <span style={{ color: "red" }}>₹</span>
+                      </div>
+                    }
                     type={"number"}
                     placeholder={"Enter advance Amount"}
                     value={advncamnt}

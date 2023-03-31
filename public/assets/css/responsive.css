@@ -58,6 +58,9 @@
   }
 }
 @media screen and (max-width: 520px) {
+  .inputfields {
+    width: 100%;
+  }
   .inputfieldsitem:nth-child(1) {
     width: 100%;
   }
