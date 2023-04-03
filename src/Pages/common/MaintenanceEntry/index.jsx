@@ -1,10 +1,9 @@
-/* eslint-disable */
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Header from "components/Header";
 import Form from "react-bootstrap/Form";
 import db from "../../../firebase";
 import swal from "sweetalert2";
-import { collection, addDoc, onSnapshot, query } from "firebase/firestore";
+import { collection, addDoc } from "firebase/firestore";
 import YearPicker from "react-year-picker";
 
 const MaintanaceEnrty = () => {
@@ -12,9 +11,6 @@ const MaintanaceEnrty = () => {
   const [selectedmonth, setSelectedmonth] = useState("");
   const [Maintenancefor, setMaintenancefor] = useState("");
   const [Maintenancecost, setMaintenancecost] = useState("");
-  const [montlymaintenancecost, setMontlymaintenancecost] = useState("");
-  const [year, setyear] = useState("");
-  const [month, setmonth] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -35,51 +31,6 @@ const MaintanaceEnrty = () => {
       swal.fire("registered successfully", "", "success");
       setMaintenancefor("");
       setMaintenancecost("");
-    }
-  };
-
-  const regData = async () => {
-    const regsiterdata = collection(db, "monthlymaintenance");
-    const q = query(regsiterdata);
-    onSnapshot(q, (snapshot) => {
-      let regdata = [];
-      snapshot.docs.forEach((doc) => {
-        regdata.push({ ...doc.data(), id: doc.id });
-      });
-      setyear(regdata.map((dd) => dd.year));
-      setmonth(regdata.map((dd) => dd.month));
-    });
-  };
-
-  useEffect(() => {
-    window.scrollTo(0, 0);
-    regData();
-  }, [selectedmonth]);
-
-  const handlemonthlySubmit = (e) => {
-    const checkYear = year.find((dd) => dd === selectedyear);
-    const checkMonth = month.find((dd) => dd === selectedmonth);
-
-    e.preventDefault();
-    if (selectedyear === "" && selectedmonth === "") {
-      swal.fire("Please select Year & Month", "", "error");
-    } else if (selectedyear === "") {
-      swal.fire("Please select Year", "", "error");
-    } else if (selectedmonth === "") {
-      swal.fire("Please select Month", "", "error");
-    } else {
-      if (selectedyear === checkYear && selectedmonth === checkMonth) {
-        swal.fire("Data already exist", "", "error");
-      } else {
-        addDoc(collection(db, "monthlymaintenance"), {
-          enteredat: new Date(),
-          year: selectedyear,
-          month: selectedmonth,
-          montlymaintenancecost: montlymaintenancecost,
-        });
-        swal.fire("registered successfully", "", "success");
-        setMontlymaintenancecost("");
-      }
     }
   };
 
@@ -168,41 +119,6 @@ const MaintanaceEnrty = () => {
                       />
                     </div>
                   </div>
-                  <div className="row ">
-                    <div className="col-lg-12" style={{ textAlign: "end" }}>
-                      <input
-                        className="button savebtn"
-                        name="submit"
-                        type="submit"
-                        value="submit"
-                      />
-                    </div>
-                  </div>
-                </Form>
-              </div>
-            </div>
-            <div className="col-lg-6">
-              <h1 className="pageheading mt10">Monthly Maintenance Cost</h1>
-              <div className="backcard">
-                <h4 style={{ textAlign: "center", marginBottom: "20px" }}>
-                  Enter Monthly Maintenance Cost
-                </h4>
-                <Form action="" onSubmit={handlemonthlySubmit}>
-                  <div className="row mb-3">
-                    <div className="col-lg-12">
-                      <Form.Control
-                        type="number"
-                        placeholder="Enter Maintenance cost"
-                        min="0"
-                        value={montlymaintenancecost}
-                        onChange={(e) =>
-                          setMontlymaintenancecost(e.target.value)
-                        }
-                        required
-                      />
-                    </div>
-                  </div>
-
                   <div className="row ">
                     <div className="col-lg-12" style={{ textAlign: "end" }}>
                       <input

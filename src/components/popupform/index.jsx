@@ -1,4 +1,3 @@
-/* eslint-disable */
 import React, { useEffect, useState, useRef } from "react";
 import DatePicker from "react-datepicker";
 import Select from "react-select";
@@ -446,7 +445,7 @@ export const EvntmodalForm = (props) => {
   const [endunit, setEndunit] = useState();
   const [chargeunit, setChargeunit] = useState();
   const [constantunit, setConstantunit] = useState();
-
+  const [totalunit, setTotalunit] = useState();
   const [metercost, setMetercost] = useState(0);
   const [cleaningpeople, setCleaningpeople] = useState();
   const [cleaningcostper, setCleaningcostper] = useState();
@@ -484,7 +483,7 @@ export const EvntmodalForm = (props) => {
     setMetercost(props.dataselect.metercost);
   }, [props.dataselect]);
   useEffect(() => {
-    calculateunit(startunit, endunit, constantunit, chargeunit);
+    calculateunit(startunit, endunit, chargeunit);
     calculatecleaning(cleaningpeople, cleaningcostper);
     extracost(Inputfields);
     totalcost(
@@ -517,8 +516,10 @@ export const EvntmodalForm = (props) => {
   const calculateunit = (startunit, endunit, chargeunit) => {
     if (startunit && endunit && chargeunit) {
       const unit = endunit - startunit;
-      const cost = unit * chargeunit;
-      setMetercost(cost);
+      const val = unit.toFixed(1);
+      setTotalunit(val);
+      const cost = val * chargeunit;
+      setMetercost(cost.toFixed(1));
     } else if (startunit && endunit) {
       setMetercost("Enter charge per unit");
     } else if (startunit && chargeunit) {
@@ -623,6 +624,7 @@ export const EvntmodalForm = (props) => {
       endunit: endunit,
       constantunit: constantunit,
       chargeunit: chargeunit,
+      totalunit: totalunit,
       metercost: metercost,
       cleaningpeople: cleaningpeople,
       cleaningcostper: cleaningcostper,

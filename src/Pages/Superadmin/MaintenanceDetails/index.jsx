@@ -1,4 +1,3 @@
-/* eslint-disable */
 import React, { useState, useEffect } from "react";
 import Header from "components/Header";
 // import Swal from "sweetalert2";
@@ -19,7 +18,7 @@ import { Maintenancemodal, Monmaintenancemodal } from "components/popupform";
 const MaintenanceDetails = () => {
   const [selectedyear, setSelectedyear] = useState("");
   const [maintenancedata, setMaintenancedata] = useState([]);
-  const [monmaintenancedata, setmonMaintenancedata] = useState([]);
+
   const [selecteddata, setSelecteddata] = useState([]);
   const [modalShow, setModalShow] = useState(false);
   const [monselecteddata, setmonSelecteddata] = useState([]);
@@ -38,15 +37,6 @@ const MaintenanceDetails = () => {
         });
         setMaintenancedata(regdata);
       });
-      const monregsiterdata = collection(db, "monthlymaintenance");
-      const qu = query(monregsiterdata, where("year", "==", currentyear));
-      onSnapshot(qu, (snapshot) => {
-        let monregdata = [];
-        snapshot.docs.forEach((doc) => {
-          monregdata.push({ ...doc.data(), id: doc.id });
-        });
-        setmonMaintenancedata(monregdata);
-      });
     } else {
       const regsiterdata = collection(db, "maintenance");
       const q = query(regsiterdata, where("year", "==", selectedyear));
@@ -57,24 +47,10 @@ const MaintenanceDetails = () => {
         });
         setMaintenancedata(regdata);
       });
-      const monregsiterdata = collection(db, "monthlymaintenance");
-      const qu = query(monregsiterdata, where("year", "==", selectedyear));
-      onSnapshot(qu, (snapshot) => {
-        let monregdata = [];
-        snapshot.docs.forEach((doc) => {
-          monregdata.push({ ...doc.data(), id: doc.id });
-        });
-        setmonMaintenancedata(monregdata);
-      });
     }
   };
 
   useEffect(() => {
-    // regData();
-  }, []);
-
-  useEffect(() => {
-    window.scrollTo(0, 0);
     regData();
   });
 
@@ -84,10 +60,6 @@ const MaintenanceDetails = () => {
   };
   const DeleteFunction = (data) => {
     deleteDoc(doc(db, "maintenance", data.id));
-  };
-  const monEditFunction = (data) => {
-    setmonSelecteddata(data);
-    setModalpopup(true);
   };
 
   return (
@@ -127,8 +99,6 @@ const MaintenanceDetails = () => {
                         <th scope="col">Maintenance For</th>
                         <th scope="col">Maintenance Cost</th>
                         <th scope="col"></th>
-                        <th scope="col"></th>
-                        <th scope="col">Monthly Maintenance Cost</th>
                         <th scope="col"></th>
                       </tr>
                     </thead>
@@ -179,31 +149,6 @@ const MaintenanceDetails = () => {
                                   className="fa fa-trash"
                                   style={{ cursor: "pointer" }}
                                   onClick={() => DeleteFunction(data)}
-                                ></i>
-
-                                <br />
-                              </>
-                            ) : (
-                              ""
-                            )
-                          )}
-                        </td>
-                        <td>
-                          {monmaintenancedata.map((data) =>
-                            data.month === "January" ? (
-                              <p>{data.montlymaintenancecost}</p>
-                            ) : (
-                              ""
-                            )
-                          )}
-                        </td>
-                        <td>
-                          {monmaintenancedata.map((data) =>
-                            data.month === "January" ? (
-                              <>
-                                <i
-                                  className="fa fa-edit"
-                                  onClick={() => monEditFunction(data)}
                                 ></i>
 
                                 <br />
@@ -268,30 +213,6 @@ const MaintenanceDetails = () => {
                             )
                           )}
                         </td>
-                        <td>
-                          {monmaintenancedata.map((data) =>
-                            data.month === "Feburary" ? (
-                              <p>{data.montlymaintenancecost}</p>
-                            ) : (
-                              ""
-                            )
-                          )}
-                        </td>
-                        <td>
-                          {monmaintenancedata.map((data) =>
-                            data.month === "Feburary" ? (
-                              <>
-                                <i
-                                  className="fa fa-edit"
-                                  onClick={() => monEditFunction(data)}
-                                ></i>
-                                <br />
-                              </>
-                            ) : (
-                              ""
-                            )
-                          )}
-                        </td>
                       </tr>
                       <tr>
                         <td>March</td>
@@ -340,30 +261,6 @@ const MaintenanceDetails = () => {
                                   onClick={() => DeleteFunction(data)}
                                 ></i>
 
-                                <br />
-                              </>
-                            ) : (
-                              ""
-                            )
-                          )}
-                        </td>
-                        <td>
-                          {monmaintenancedata.map((data) =>
-                            data.month === "March" ? (
-                              <p>{data.montlymaintenancecost}</p>
-                            ) : (
-                              ""
-                            )
-                          )}
-                        </td>
-                        <td>
-                          {monmaintenancedata.map((data) =>
-                            data.month === "March" ? (
-                              <>
-                                <i
-                                  className="fa fa-edit"
-                                  onClick={() => monEditFunction(data)}
-                                ></i>
                                 <br />
                               </>
                             ) : (
@@ -426,30 +323,6 @@ const MaintenanceDetails = () => {
                             )
                           )}
                         </td>
-                        <td>
-                          {monmaintenancedata.map((data) =>
-                            data.month === "April" ? (
-                              <p>{data.montlymaintenancecost}</p>
-                            ) : (
-                              ""
-                            )
-                          )}
-                        </td>
-                        <td>
-                          {monmaintenancedata.map((data) =>
-                            data.month === "April" ? (
-                              <>
-                                <i
-                                  className="fa fa-edit"
-                                  onClick={() => monEditFunction(data)}
-                                ></i>
-                                <br />
-                              </>
-                            ) : (
-                              ""
-                            )
-                          )}
-                        </td>
                       </tr>
                       <tr>
                         <td>May</td>
@@ -498,30 +371,6 @@ const MaintenanceDetails = () => {
                                   onClick={() => DeleteFunction(data)}
                                 ></i>
 
-                                <br />
-                              </>
-                            ) : (
-                              ""
-                            )
-                          )}
-                        </td>
-                        <td>
-                          {monmaintenancedata.map((data) =>
-                            data.month === "May" ? (
-                              <p>{data.montlymaintenancecost}</p>
-                            ) : (
-                              ""
-                            )
-                          )}
-                        </td>
-                        <td>
-                          {monmaintenancedata.map((data) =>
-                            data.month === "May" ? (
-                              <>
-                                <i
-                                  className="fa fa-edit"
-                                  onClick={() => monEditFunction(data)}
-                                ></i>
                                 <br />
                               </>
                             ) : (
@@ -584,30 +433,6 @@ const MaintenanceDetails = () => {
                             )
                           )}
                         </td>
-                        <td>
-                          {monmaintenancedata.map((data) =>
-                            data.month === "June" ? (
-                              <p>{data.montlymaintenancecost}</p>
-                            ) : (
-                              ""
-                            )
-                          )}
-                        </td>
-                        <td>
-                          {monmaintenancedata.map((data) =>
-                            data.month === "June" ? (
-                              <>
-                                <i
-                                  className="fa fa-edit"
-                                  onClick={() => monEditFunction(data)}
-                                ></i>
-                                <br />
-                              </>
-                            ) : (
-                              ""
-                            )
-                          )}
-                        </td>
                       </tr>
                       <tr>
                         <td>July</td>
@@ -656,30 +481,6 @@ const MaintenanceDetails = () => {
                                   onClick={() => DeleteFunction(data)}
                                 ></i>
 
-                                <br />
-                              </>
-                            ) : (
-                              ""
-                            )
-                          )}
-                        </td>
-                        <td>
-                          {monmaintenancedata.map((data) =>
-                            data.month === "July" ? (
-                              <p>{data.montlymaintenancecost}</p>
-                            ) : (
-                              ""
-                            )
-                          )}
-                        </td>
-                        <td>
-                          {monmaintenancedata.map((data) =>
-                            data.month === "July" ? (
-                              <>
-                                <i
-                                  className="fa fa-edit"
-                                  onClick={() => monEditFunction(data)}
-                                ></i>
                                 <br />
                               </>
                             ) : (
@@ -743,30 +544,6 @@ const MaintenanceDetails = () => {
                             )
                           )}
                         </td>
-                        <td>
-                          {monmaintenancedata.map((data) =>
-                            data.month === "August" ? (
-                              <p>{data.montlymaintenancecost}</p>
-                            ) : (
-                              ""
-                            )
-                          )}
-                        </td>
-                        <td>
-                          {monmaintenancedata.map((data) =>
-                            data.month === "August" ? (
-                              <>
-                                <i
-                                  className="fa fa-edit"
-                                  onClick={() => monEditFunction(data)}
-                                ></i>
-                                <br />
-                              </>
-                            ) : (
-                              ""
-                            )
-                          )}
-                        </td>
                       </tr>
                       <tr>
                         <td>September</td>
@@ -815,30 +592,6 @@ const MaintenanceDetails = () => {
                                   onClick={() => DeleteFunction(data)}
                                 ></i>
 
-                                <br />
-                              </>
-                            ) : (
-                              ""
-                            )
-                          )}
-                        </td>
-                        <td>
-                          {monmaintenancedata.map((data) =>
-                            data.month === "September" ? (
-                              <p>{data.montlymaintenancecost}</p>
-                            ) : (
-                              ""
-                            )
-                          )}
-                        </td>
-                        <td>
-                          {monmaintenancedata.map((data) =>
-                            data.month === "September" ? (
-                              <>
-                                <i
-                                  className="fa fa-edit"
-                                  onClick={() => monEditFunction(data)}
-                                ></i>
                                 <br />
                               </>
                             ) : (
@@ -901,30 +654,6 @@ const MaintenanceDetails = () => {
                             )
                           )}
                         </td>
-                        <td>
-                          {monmaintenancedata.map((data) =>
-                            data.month === "October" ? (
-                              <p>{data.montlymaintenancecost}</p>
-                            ) : (
-                              ""
-                            )
-                          )}
-                        </td>
-                        <td>
-                          {monmaintenancedata.map((data) =>
-                            data.month === "October" ? (
-                              <>
-                                <i
-                                  className="fa fa-edit"
-                                  onClick={() => monEditFunction(data)}
-                                ></i>
-                                <br />
-                              </>
-                            ) : (
-                              ""
-                            )
-                          )}
-                        </td>
                       </tr>
                       <tr>
                         <td>November</td>
@@ -980,30 +709,6 @@ const MaintenanceDetails = () => {
                             )
                           )}
                         </td>
-                        <td>
-                          {monmaintenancedata.map((data) =>
-                            data.month === "November" ? (
-                              <p>{data.montlymaintenancecost}</p>
-                            ) : (
-                              ""
-                            )
-                          )}
-                        </td>
-                        <td>
-                          {monmaintenancedata.map((data) =>
-                            data.month === "November" ? (
-                              <>
-                                <i
-                                  className="fa fa-edit"
-                                  onClick={() => monEditFunction(data)}
-                                ></i>
-                                <br />
-                              </>
-                            ) : (
-                              ""
-                            )
-                          )}
-                        </td>
                       </tr>
                       <tr>
                         <td>December</td>
@@ -1052,30 +757,6 @@ const MaintenanceDetails = () => {
                                   onClick={() => DeleteFunction(data)}
                                 ></i>
 
-                                <br />
-                              </>
-                            ) : (
-                              ""
-                            )
-                          )}
-                        </td>
-                        <td>
-                          {monmaintenancedata.map((data) =>
-                            data.month === "December" ? (
-                              <p>{data.montlymaintenancecost}</p>
-                            ) : (
-                              ""
-                            )
-                          )}
-                        </td>
-                        <td>
-                          {monmaintenancedata.map((data) =>
-                            data.month === "December" ? (
-                              <>
-                                <i
-                                  className="fa fa-edit"
-                                  onClick={() => monEditFunction(data)}
-                                ></i>
                                 <br />
                               </>
                             ) : (

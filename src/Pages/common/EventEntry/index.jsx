@@ -179,11 +179,10 @@ const EventEntry = () => {
   const calculateunit = (startunit, endunit, chargeunit) => {
     if (startunit && endunit && chargeunit) {
       const sum3 = endunit - startunit;
-
-      setTotalunit(sum3);
-      const total = sum3 * chargeunit;
-
-      setMetercost(total);
+      const val = sum3.toFixed(1);
+      setTotalunit(val);
+      const total = val * chargeunit;
+      setMetercost(total.toFixed(1));
     }
   };
 
