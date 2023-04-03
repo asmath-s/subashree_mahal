@@ -1,10 +1,11 @@
-/* eslint-disable */
 import React, { useEffect, useState, useRef } from "react";
 import Header from "components/Header";
 import db from "../../../firebase";
 import {
   collection,
   onSnapshot,
+  deleteDoc,
+  doc,
   orderBy,
   query,
   where,
@@ -16,6 +17,7 @@ import Form from "react-bootstrap/Form";
 
 import DatePicker from "react-datepicker";
 import { DownloadTableExcel } from "react-export-table-to-excel";
+import Swal from "sweetalert2";
 
 const EventReport = () => {
   const [registrationdata, setRegistrationData] = useState([]);
@@ -44,7 +46,7 @@ const EventReport = () => {
         snapshot.docs.forEach((doc) => {
           regdata.push({ ...doc.data(), id: doc.id });
         });
-        setRegistrationData(regdata);
+        setRegistrationData(regdata.reverse());
       });
     } else {
       const regsiterdata = collection(db, "registration");
@@ -59,7 +61,7 @@ const EventReport = () => {
         snapshot.docs.forEach((doc) => {
           regdata.push({ ...doc.data(), id: doc.id });
         });
-        setRegistrationData(regdata);
+        setRegistrationData(regdata.reverse());
       });
     }
   };
@@ -88,6 +90,27 @@ const EventReport = () => {
   const handleClear = () => {
     setStartDate("");
     setendDate("");
+  };
+
+  const DeleteFunction = (data) => {
+    Swal.fire({
+      title: "Permanently Delete",
+      text: "You won't be able to recover this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.value) {
+        deleteDoc(doc(db, "registration", data.id));
+        Swal.fire("Deleted!", "Your data has been deleted.", "success");
+
+        regData();
+      } else {
+        Swal.fire("Cancelled", "Your file is safe :)", "error");
+      }
+    });
   };
 
   return (
@@ -200,6 +223,7 @@ const EventReport = () => {
                         <th scope="col">Balance</th>
                         <th scope="col">Invoice Copy</th>
                         <th scope="col"></th>
+                        <th scope="col"></th>
                       </tr>
                     </thead>
                     <tbody>
@@ -250,6 +274,9 @@ const EventReport = () => {
                           </td>
                           <td onClick={() => EditFunction(data)}>
                             <i className="fa fa-edit"></i>
+                          </td>
+                          <td onClick={() => DeleteFunction(data)}>
+                            <i className="fa fa-trash"></i>
                           </td>
                         </tr>
                       ))}

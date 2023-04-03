@@ -56,7 +56,7 @@ const BookingReport = () => {
         });
         console.log(regdata.length, "total");
 
-        setRegistrationData(regdata);
+        setRegistrationData(regdata.reverse());
       });
     } else {
       const regsiterdata = collection(db, "registration");
@@ -71,7 +71,7 @@ const BookingReport = () => {
         snapshot.docs.forEach((doc) => {
           regdata.push({ ...doc.data(), id: doc.id });
         });
-        setRegistrationData(regdata);
+        setRegistrationData(regdata.reverse());
       });
     }
   };

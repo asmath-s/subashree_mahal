@@ -604,7 +604,12 @@ const EventEntry = () => {
                     />
 
                     <FormnumComp
-                      label={"Enter Charge per unit"}
+                      label={
+                        <>
+                          <span>Enter Charge per unit&nbsp;</span>
+                          <span style={{ color: "red" }}>₹</span>
+                        </>
+                      }
                       type={"number"}
                       placeholder={"Enter Charge per Unit"}
                       value={chargeunit}
@@ -640,24 +645,25 @@ const EventEntry = () => {
                       <div className="col-lg-3 mb10">
                         <Form.Control
                           type="number"
-                          placeholder="How many Cleaning People worked"
+                          placeholder="How many people"
                           min={0}
                           value={cleaningpeople}
                           onChange={(e) => setCleaningpeople(e.target.value)}
                           required
                         />
                       </div>
-                      <div className="col-lg-3 mb10">
+                      <div className="col-lg-3 mb10 dflexinside">
+                        <span style={{ color: "red" }}>₹</span>
                         <Form.Control
                           type="number"
-                          placeholder="Enter Cleaning Cost per Person"
+                          placeholder="per Person"
                           min={0}
                           value={cleaningcostper}
                           onChange={(e) => setCleaningcostper(e.target.value)}
                           required
                         />
                       </div>
-                      <div className="col-lg-3 ">
+                      <div className="col-lg-3">
                         <p className="autocalc"> {cleaningcost}</p>
                       </div>
                     </div>
@@ -673,9 +679,14 @@ const EventEntry = () => {
                     />
 
                     <FormnumComp
-                      label={"Enter Generator Cost"}
+                      label={
+                        <div>
+                          <span>Enter Generator/Ac Cost&nbsp;</span>
+                          <span style={{ color: "red" }}>₹</span>
+                        </div>
+                      }
                       type={"number"}
-                      placeholder={"Enter Generator cost"}
+                      placeholder={"Enter Generator/Ac cost"}
                       value={Generatorcost}
                       mins={0}
                       onChange={(e) => setGeneratorcost(e.target.value)}
@@ -689,7 +700,7 @@ const EventEntry = () => {
                       <div className="col-lg-9 inputfields">
                         {Inputfields.map((Inputfield, index) => (
                           <div className="inputfields" key={index}>
-                            <div className="inputfieldsitem mb10">
+                            <div>
                               <Form.Control
                                 name="otherfor"
                                 type="text"
@@ -698,25 +709,20 @@ const EventEntry = () => {
                                 onChange={(e) => handleInputChange(index, e)}
                               />
                             </div>
-                            <div className="inputfieldsitem ">
+                            <div className="dflexinside">
+                              <span style={{ color: "red" }}>₹</span>
                               <Form.Control
                                 name="othercost"
                                 type="text"
-                                placeholder="Enter other cost "
+                                placeholder="Enter other cost"
                                 value={Inputfield.othercost}
                                 onChange={(e) => handleInputChange(index, e)}
                               />
                             </div>
-                            <div
-                              className="inputfieldsitem"
-                              onClick={() => handleAddfields()}
-                            >
+                            <div onClick={() => handleAddfields()}>
                               <i className="fas fa-plus-circle"></i>
                             </div>
-                            <div
-                              className="inputfieldsitem"
-                              onClick={() => handleRemovefields(index)}
-                            >
+                            <div onClick={() => handleRemovefields(index)}>
                               <i className="fas fa-minus-circle"></i>
                             </div>
                           </div>

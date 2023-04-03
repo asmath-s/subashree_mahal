@@ -106,7 +106,9 @@ const MaintanaceEnrty = () => {
                   </div>
                   <div className="row mb-3">
                     <div className="col-lg-3">
-                      <Form.Label>Maintenance cost </Form.Label>
+                      <Form.Label>
+                        Maintenance cost <span style={{ color: "red" }}>₹</span>
+                      </Form.Label>
                     </div>
                     <div className="col-lg-9">
                       <Form.Control

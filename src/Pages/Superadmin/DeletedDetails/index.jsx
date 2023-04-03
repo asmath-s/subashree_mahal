@@ -96,7 +96,7 @@ const DeletedDetails = () => {
     setStartDate("");
     setendDate("");
   };
-  const DeleteFunction = () => {
+  const DeleteFunction = (data) => {
     Swal.fire({
       title: "Permanently Delete",
       text: "You won't be able to recover this!",

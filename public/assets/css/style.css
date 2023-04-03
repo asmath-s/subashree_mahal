@@ -569,7 +569,17 @@ input[type="number"] {
 .eventInactive {
   opacity: 1 !important;
 }
-
+.dflex {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+.dflexinside {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
 /*======================
     404 page
 =======================*/
