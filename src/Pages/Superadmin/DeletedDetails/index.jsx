@@ -48,15 +48,17 @@ const DeletedDetails = () => {
   const regData = () => {
     if (startDate === "" && endDate === "") {
       const regsiterdata = collection(db, "deleted");
-      const q = query(regsiterdata);
+      const q = query(
+        regsiterdata,
+        where("year", "==", new Date().getFullYear())
+      );
       onSnapshot(q, (snapshot) => {
         let regdata = [];
         snapshot.docs.forEach((doc) => {
           regdata.push({ ...doc.data(), id: doc.id });
         });
 
-        setRegistrationData(regdata);
-        console.log(regdata);
+        setRegistrationData(regdata.reverse());
       });
     } else {
       const regsiterdata = collection(db, "deleted");

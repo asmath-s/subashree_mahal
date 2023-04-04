@@ -48,7 +48,11 @@ const BookingReport = () => {
   const regData = () => {
     if (startDate === "" && endDate === "") {
       const regsiterdata = collection(db, "registration");
-      const q = query(regsiterdata, where("finished", "==", false));
+      const q = query(
+        regsiterdata,
+        where("finished", "==", false),
+        where("year", "==", new Date().getFullYear())
+      );
       onSnapshot(q, (snapshot) => {
         let regdata = [];
         snapshot.docs.forEach((doc) => {
@@ -71,7 +75,7 @@ const BookingReport = () => {
         snapshot.docs.forEach((doc) => {
           regdata.push({ ...doc.data(), id: doc.id });
         });
-        setRegistrationData(regdata.reverse());
+        setRegistrationData(regdata);
       });
     }
   };

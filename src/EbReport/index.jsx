@@ -51,7 +51,11 @@ export default function EBreport() {
   const regData = () => {
     if (startDate === "" && endDate === "") {
       const regsiterdata = collection(db, "registration");
-      const q = query(regsiterdata, where("finished", "==", true));
+      const q = query(
+        regsiterdata,
+        where("finished", "==", true),
+        where("year", "==", new Date().getFullYear())
+      );
       onSnapshot(q, (snapshot) => {
         let regdata = [];
         snapshot.docs.forEach((doc) => {
@@ -388,12 +392,12 @@ export default function EBreport() {
                           <td>
                             {moment
                               .unix(data.startdate.seconds)
-                              .format("MM/DD/YYYY")}
+                              .format("DD/MM/YYYY")}
                           </td>
                           <td>
                             {moment
                               .unix(data.enddate.seconds)
-                              .format("MM/DD/YYYY")}
+                              .format("DD/MM/YYYY")}
                           </td>
                           <td>{data.numberofdays}</td>
                           <td>{data.startunit}</td>

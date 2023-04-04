@@ -8,15 +8,15 @@ import { collection, onSnapshot, query, where } from "firebase/firestore";
 import { DownloadTableExcel } from "react-export-table-to-excel";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
+import moment from "moment";
 
 const ExpenseReport = () => {
   const [selectedyear, setSelectedyear] = useState("");
   const [maintenancedata, setMaintenancedata] = useState([]);
+  const [registrationdata, setRegistrationData] = useState([]);
 
   const [totalmaincost, setTotalmaincost] = useState("");
   const [totalmonmaincost, setTotalmonmaincost] = useState("");
-
-  const [totalMaint, settotalMaint] = useState("");
 
   const [January, setJanuary] = useState(0);
   const [Feburary, setFeburary] = useState(0);
@@ -173,8 +173,6 @@ const ExpenseReport = () => {
       e1month: "Total",
       e2maintenanceFor: "",
       e3maintenanceCost: totalmaincost,
-      e4monthlyMaintenanceCost: totalmonmaincost,
-      e5total: totalMaint,
     },
   ];
 
@@ -260,6 +258,20 @@ const ExpenseReport = () => {
           setTotalmaincost(totalmacost);
         }
       });
+      const regsiterationdata = collection(db, "registration");
+      const req = query(
+        regsiterationdata,
+        where("finished", "==", true),
+        where("year", "==", currentyear)
+      );
+      onSnapshot(req, (snapshot) => {
+        let regdata = [];
+        snapshot.docs.forEach((doc) => {
+          regdata.push({ ...doc.data(), id: doc.id });
+        });
+        console.log(regdata);
+        setRegistrationData(regdata);
+      });
     } else {
       const regsiterdata = collection(db, "maintenance");
       const q = query(regsiterdata, where("year", "==", selectedyear));
@@ -285,7 +297,6 @@ const ExpenseReport = () => {
   const totalCal = () => {
     // ------------January-------------------
     //maintenance cost
-
     var Jan = [];
     maintenancedata.forEach((data) => {
       if ("January" === data.month) {
@@ -293,12 +304,27 @@ const ExpenseReport = () => {
         setjanmfor(data.maintenancefor);
       }
     });
+    var regjan = [];
+    registrationdata.forEach((data) => {
+      if (moment.unix(data.startdate.seconds).format("MMMM") === "January") {
+        data.otherco.map((d) => {
+          regjan.push(d.othercost);
+        });
+      }
+    });
     var Jantotalcost = 0;
     Jan.forEach((data) => {
       Jantotalcost += parseInt(data);
       setjanmcost(Jantotalcost);
     });
-    setJanuary(parseInt(Jantotalcost));
+    var regjancost = 0;
+    regjan.forEach((data) => {
+      regjancost += parseInt(data);
+    });
+
+    //sum
+    const jansum = parseInt(Jantotalcost) + parseInt(regjancost);
+    setJanuary(jansum);
 
     // ----------------January---------------
 
@@ -311,14 +337,29 @@ const ExpenseReport = () => {
         setFebmfor(data.maintenancefor);
       }
     });
+
+    var regfeb = [];
+    registrationdata.forEach((data) => {
+      if (moment.unix(data.startdate.seconds).format("MMMM") === "February") {
+        data.otherco.map((d) => {
+          regfeb.push(d.othercost);
+        });
+      }
+    });
+
     var Febtotalcost = 0;
     Feb.forEach((data) => {
       Febtotalcost += parseInt(data);
       setFebmcost(Febtotalcost);
     });
 
+    var regfebcost = 0;
+    regfeb.forEach((data) => {
+      regfebcost += parseInt(data);
+    });
+
     //sum
-    const febsum = parseInt(Febtotalcost);
+    const febsum = parseInt(Febtotalcost) + parseInt(regfebcost);
     setFeburary(febsum);
     // ----------------Feburary---------------
 
@@ -331,14 +372,28 @@ const ExpenseReport = () => {
         setMarmfor(data.maintenancefor);
       }
     });
+    var regmar = [];
+    registrationdata.forEach((data) => {
+      if (moment.unix(data.startdate.seconds).format("MMMM") === "March") {
+        data.otherco.map((d) => {
+          regmar.push(d.othercost);
+        });
+      }
+    });
+
     var Marchtotalcost = 0;
     March.forEach((data) => {
       Marchtotalcost += parseInt(data);
       setMarmcost(Marchtotalcost);
     });
 
+    var regmarcost = 0;
+    regmar.forEach((data) => {
+      regmarcost += parseInt(data);
+    });
+
     //sum
-    const marsum = parseInt(Marchtotalcost);
+    const marsum = parseInt(Marchtotalcost) + parseInt(regmarcost);
     setMarch(marsum);
 
     // ----------------March---------------
@@ -352,14 +407,26 @@ const ExpenseReport = () => {
         setAprmfor(data.maintenancefor);
       }
     });
+    var regapr = [];
+    registrationdata.forEach((data) => {
+      if (moment.unix(data.startdate.seconds).format("MMMM") === "April") {
+        data.otherco.map((d) => {
+          regapr.push(d.othercost);
+        });
+      }
+    });
     var Apriltotalcost = 0;
     April.forEach((data) => {
       Apriltotalcost += parseInt(data);
       setAprmcost(Apriltotalcost);
     });
+    var regaprcost = 0;
+    regapr.forEach((data) => {
+      regaprcost += parseInt(data);
+    });
 
     //sum
-    const aprsum = parseInt(Apriltotalcost);
+    const aprsum = parseInt(Apriltotalcost) + parseInt(regaprcost);
     setApril(aprsum);
 
     // ----------------April---------------
@@ -373,15 +440,26 @@ const ExpenseReport = () => {
         setMaymfor(data.maintenancefor);
       }
     });
+    var regmay = [];
+    registrationdata.forEach((data) => {
+      if (moment.unix(data.startdate.seconds).format("MMMM") === "May") {
+        data.otherco.map((d) => {
+          regmay.push(d.othercost);
+        });
+      }
+    });
     var Maytotalcost = 0;
     May.forEach((data) => {
       Maytotalcost += parseInt(data);
       setMaycost(Maytotalcost);
     });
+    var regmaycost = 0;
+    regmay.forEach((data) => {
+      regmaycost += parseInt(data);
+    });
 
     //sum
-    const maysum = parseInt(Maytotalcost);
-
+    const maysum = parseInt(Maytotalcost) + parseInt(regmaycost);
     setMay(maysum);
 
     // ----------------May---------------
@@ -395,14 +473,26 @@ const ExpenseReport = () => {
         setJunmfor(data.maintenancefor);
       }
     });
+    var regjune = [];
+    registrationdata.forEach((data) => {
+      if (moment.unix(data.startdate.seconds).format("MMMM") === "June") {
+        data.otherco.map((d) => {
+          regjune.push(d.othercost);
+        });
+      }
+    });
     var Junetotalcost = 0;
     June.forEach((data) => {
       Junetotalcost += parseInt(data);
       setJuncost(Junetotalcost);
     });
 
+    var regjunecost = 0;
+    regjune.forEach((data) => {
+      regjunecost += parseInt(data);
+    });
     //sum
-    const junsum = parseInt(Junetotalcost);
+    const junsum = parseInt(Junetotalcost) + parseInt(regjunecost);
     setJune(junsum);
 
     // ----------------June---------------
@@ -416,14 +506,26 @@ const ExpenseReport = () => {
         setJulmfor(data.maintenancefor);
       }
     });
+    var regjuly = [];
+    registrationdata.forEach((data) => {
+      if (moment.unix(data.startdate.seconds).format("MMMM") === "July") {
+        data.otherco.map((d) => {
+          regjuly.push(d.othercost);
+        });
+      }
+    });
     var Julytotalcost = 0;
     June.forEach((data) => {
       Julytotalcost += parseInt(data);
       setJulcost(Julytotalcost);
     });
+    var regjulycost = 0;
+    regjuly.forEach((data) => {
+      regjulycost += parseInt(data);
+    });
 
     //sum
-    const julsum = parseInt(Julytotalcost);
+    const julsum = parseInt(Julytotalcost) + parseInt(regjulycost);
     setJuly(julsum);
 
     // ----------------July---------------
@@ -437,14 +539,26 @@ const ExpenseReport = () => {
         setAugmfor(data.maintenancefor);
       }
     });
+    var regaug = [];
+    registrationdata.forEach((data) => {
+      if (moment.unix(data.startdate.seconds).format("MMMM") === "August") {
+        data.otherco.map((d) => {
+          regaug.push(d.othercost);
+        });
+      }
+    });
     var augtotalcost = 0;
     aug.forEach((data) => {
       augtotalcost += parseInt(data);
       setAugcost(augtotalcost);
     });
+    var regaugcost = 0;
+    regaug.forEach((data) => {
+      regaugcost += parseInt(data);
+    });
 
     //sum
-    const augsum = parseInt(augtotalcost);
+    const augsum = parseInt(augtotalcost) + parseInt(regaugcost);
     setAugust(augsum);
 
     // ----------------August---------------
@@ -458,14 +572,26 @@ const ExpenseReport = () => {
         setSepmfor(data.maintenancefor);
       }
     });
+    var regsep = [];
+    registrationdata.forEach((data) => {
+      if (moment.unix(data.startdate.seconds).format("MMMM") === "September") {
+        data.otherco.map((d) => {
+          regsep.push(d.othercost);
+        });
+      }
+    });
     var Septembertotalcost = 0;
     September.forEach((data) => {
       Septembertotalcost += parseInt(data);
       setSepcost(Septembertotalcost);
     });
+    var regsepcost = 0;
+    regsep.forEach((data) => {
+      regsepcost += parseInt(data);
+    });
 
     //sum
-    const sepsum = parseInt(Septembertotalcost);
+    const sepsum = parseInt(Septembertotalcost) + parseInt(regsepcost);
     setSeptember(sepsum);
 
     // ----------------September---------------
@@ -479,14 +605,26 @@ const ExpenseReport = () => {
         setOctmfor(data.maintenancefor);
       }
     });
+    var regoct = [];
+    registrationdata.forEach((data) => {
+      if (moment.unix(data.startdate.seconds).format("MMMM") === "October") {
+        data.otherco.map((d) => {
+          regoct.push(d.othercost);
+        });
+      }
+    });
     var Octobertotalcost = 0;
     October.forEach((data) => {
       Octobertotalcost += parseInt(data);
       setOctcost(Octobertotalcost);
     });
+    var regoctcost = 0;
+    regoct.forEach((data) => {
+      regoctcost += parseInt(data);
+    });
 
     //sum
-    const octsum = parseInt(Octobertotalcost);
+    const octsum = parseInt(Octobertotalcost) + parseInt(regoctcost);
     setOctober(octsum);
 
     // ----------------October---------------
@@ -500,14 +638,26 @@ const ExpenseReport = () => {
         setNovmfor(data.maintenancefor);
       }
     });
+    var regnov = [];
+    registrationdata.forEach((data) => {
+      if (moment.unix(data.startdate.seconds).format("MMMM") === "November") {
+        data.otherco.map((d) => {
+          regnov.push(d.othercost);
+        });
+      }
+    });
     var Novembertotalcost = 0;
     November.forEach((data) => {
       Novembertotalcost += parseInt(data);
       setNovcost(Novembertotalcost);
     });
+    var regnovcost = 0;
+    regnov.forEach((data) => {
+      regnovcost += parseInt(data);
+    });
 
     //sum
-    const novsum = parseInt(Novembertotalcost);
+    const novsum = parseInt(Novembertotalcost) + parseInt(regnovcost);
     setNovember(novsum);
 
     // ----------------November---------------
@@ -521,21 +671,29 @@ const ExpenseReport = () => {
         setDecmfor(data.maintenancefor);
       }
     });
+    var regdec = [];
+    registrationdata.forEach((data) => {
+      if (moment.unix(data.startdate.seconds).format("MMMM") === "December") {
+        data.otherco.map((d) => {
+          regdec.push(d.othercost);
+        });
+      }
+    });
     var Decembertotalcost = 0;
     December.forEach((data) => {
       Decembertotalcost += parseInt(data);
       setDeccost(Decembertotalcost);
     });
+    var regdeccost = 0;
+    regdec.forEach((data) => {
+      regdeccost += parseInt(data);
+    });
 
     //sum
-    const decsum = parseInt(Decembertotalcost);
+    const decsum = parseInt(Decembertotalcost) + parseInt(regdeccost);
     setDecember(decsum);
 
     // ----------------December---------------
-
-    //total
-    const total = totalmaincost + totalmonmaincost;
-    settotalMaint(total);
   };
 
   useEffect(() => {
@@ -630,6 +788,16 @@ const ExpenseReport = () => {
                               ""
                             )
                           )}
+
+                          {registrationdata.map((data) =>
+                            moment
+                              .unix(data.startdate.seconds)
+                              .format("MMMM") === "January"
+                              ? data.otherco.map((d, index) => (
+                                  <p key={index}>{d.otherfor}</p>
+                                ))
+                              : ""
+                          )}
                         </td>
                         <td>
                           {maintenancedata.map((data) =>
@@ -638,6 +806,15 @@ const ExpenseReport = () => {
                             ) : (
                               ""
                             )
+                          )}
+                          {registrationdata.map((data) =>
+                            moment
+                              .unix(data.startdate.seconds)
+                              .format("MMMM") === "January"
+                              ? data.otherco.map((d, index) => (
+                                  <p key={index}>{d.othercost}</p>
+                                ))
+                              : ""
                           )}
                         </td>
 
@@ -654,6 +831,15 @@ const ExpenseReport = () => {
                               ""
                             )
                           )}
+                          {registrationdata.map((data) =>
+                            moment
+                              .unix(data.startdate.seconds)
+                              .format("MMMM") === "February"
+                              ? data.otherco.map((d, index) => (
+                                  <p key={index}>{d.otherfor}</p>
+                                ))
+                              : ""
+                          )}
                         </td>
                         <td>
                           {maintenancedata.map((data) =>
@@ -662,6 +848,15 @@ const ExpenseReport = () => {
                             ) : (
                               ""
                             )
+                          )}
+                          {registrationdata.map((data) =>
+                            moment
+                              .unix(data.startdate.seconds)
+                              .format("MMMM") === "February"
+                              ? data.otherco.map((d, index) => (
+                                  <p key={index}>{d.othercost}</p>
+                                ))
+                              : ""
                           )}
                         </td>
 
@@ -678,6 +873,15 @@ const ExpenseReport = () => {
                               ""
                             )
                           )}
+                          {registrationdata.map((data) =>
+                            moment
+                              .unix(data.startdate.seconds)
+                              .format("MMMM") === "March"
+                              ? data.otherco.map((d, index) => (
+                                  <p key={index}>{d.otherfor}</p>
+                                ))
+                              : ""
+                          )}
                         </td>
                         <td>
                           {maintenancedata.map((data) =>
@@ -686,6 +890,15 @@ const ExpenseReport = () => {
                             ) : (
                               ""
                             )
+                          )}
+                          {registrationdata.map((data) =>
+                            moment
+                              .unix(data.startdate.seconds)
+                              .format("MMMM") === "March"
+                              ? data.otherco.map((d, index) => (
+                                  <p key={index}>{d.othercost}</p>
+                                ))
+                              : ""
                           )}
                         </td>
 
@@ -702,6 +915,15 @@ const ExpenseReport = () => {
                               ""
                             )
                           )}
+                          {registrationdata.map((data) =>
+                            moment
+                              .unix(data.startdate.seconds)
+                              .format("MMMM") === "April"
+                              ? data.otherco.map((d, index) => (
+                                  <p key={index}>{d.otherfor}</p>
+                                ))
+                              : ""
+                          )}
                         </td>
                         <td>
                           {maintenancedata.map((data) =>
@@ -710,6 +932,15 @@ const ExpenseReport = () => {
                             ) : (
                               ""
                             )
+                          )}
+                          {registrationdata.map((data) =>
+                            moment
+                              .unix(data.startdate.seconds)
+                              .format("MMMM") === "April"
+                              ? data.otherco.map((d, index) => (
+                                  <p key={index}>{d.othercost}</p>
+                                ))
+                              : ""
                           )}
                         </td>
 
@@ -726,6 +957,15 @@ const ExpenseReport = () => {
                               ""
                             )
                           )}
+                          {registrationdata.map((data) =>
+                            moment
+                              .unix(data.startdate.seconds)
+                              .format("MMMM") === "May"
+                              ? data.otherco.map((d, index) => (
+                                  <p key={index}>{d.otherfor}</p>
+                                ))
+                              : ""
+                          )}
                         </td>
                         <td>
                           {maintenancedata.map((data) =>
@@ -734,6 +974,15 @@ const ExpenseReport = () => {
                             ) : (
                               ""
                             )
+                          )}
+                          {registrationdata.map((data) =>
+                            moment
+                              .unix(data.startdate.seconds)
+                              .format("MMMM") === "May"
+                              ? data.otherco.map((d, index) => (
+                                  <p key={index}>{d.othercost}</p>
+                                ))
+                              : ""
                           )}
                         </td>
 
@@ -750,6 +999,15 @@ const ExpenseReport = () => {
                               ""
                             )
                           )}
+                          {registrationdata.map((data) =>
+                            moment
+                              .unix(data.startdate.seconds)
+                              .format("MMMM") === "June"
+                              ? data.otherco.map((d, index) => (
+                                  <p key={index}>{d.otherfor}</p>
+                                ))
+                              : ""
+                          )}
                         </td>
                         <td>
                           {maintenancedata.map((data) =>
@@ -758,6 +1016,15 @@ const ExpenseReport = () => {
                             ) : (
                               ""
                             )
+                          )}
+                          {registrationdata.map((data) =>
+                            moment
+                              .unix(data.startdate.seconds)
+                              .format("MMMM") === "June"
+                              ? data.otherco.map((d, index) => (
+                                  <p key={index}>{d.othercost}</p>
+                                ))
+                              : ""
                           )}
                         </td>
 
@@ -774,6 +1041,15 @@ const ExpenseReport = () => {
                               ""
                             )
                           )}
+                          {registrationdata.map((data) =>
+                            moment
+                              .unix(data.startdate.seconds)
+                              .format("MMMM") === "July"
+                              ? data.otherco.map((d, index) => (
+                                  <p key={index}>{d.otherfor}</p>
+                                ))
+                              : ""
+                          )}
                         </td>
                         <td>
                           {maintenancedata.map((data) =>
@@ -782,6 +1058,15 @@ const ExpenseReport = () => {
                             ) : (
                               ""
                             )
+                          )}
+                          {registrationdata.map((data) =>
+                            moment
+                              .unix(data.startdate.seconds)
+                              .format("MMMM") === "July"
+                              ? data.otherco.map((d, index) => (
+                                  <p key={index}>{d.othercost}</p>
+                                ))
+                              : ""
                           )}
                         </td>
 
@@ -798,6 +1083,15 @@ const ExpenseReport = () => {
                               ""
                             )
                           )}
+                          {registrationdata.map((data) =>
+                            moment
+                              .unix(data.startdate.seconds)
+                              .format("MMMM") === "August"
+                              ? data.otherco.map((d, index) => (
+                                  <p key={index}>{d.otherfor}</p>
+                                ))
+                              : ""
+                          )}
                         </td>
                         <td>
                           {maintenancedata.map((data) =>
@@ -806,6 +1100,15 @@ const ExpenseReport = () => {
                             ) : (
                               ""
                             )
+                          )}
+                          {registrationdata.map((data) =>
+                            moment
+                              .unix(data.startdate.seconds)
+                              .format("MMMM") === "August"
+                              ? data.otherco.map((d, index) => (
+                                  <p key={index}>{d.othercost}</p>
+                                ))
+                              : ""
                           )}
                         </td>
 
@@ -822,6 +1125,15 @@ const ExpenseReport = () => {
                               ""
                             )
                           )}
+                          {registrationdata.map((data) =>
+                            moment
+                              .unix(data.startdate.seconds)
+                              .format("MMMM") === "September"
+                              ? data.otherco.map((d, index) => (
+                                  <p key={index}>{d.otherfor}</p>
+                                ))
+                              : ""
+                          )}
                         </td>
                         <td>
                           {maintenancedata.map((data) =>
@@ -830,6 +1142,15 @@ const ExpenseReport = () => {
                             ) : (
                               ""
                             )
+                          )}
+                          {registrationdata.map((data) =>
+                            moment
+                              .unix(data.startdate.seconds)
+                              .format("MMMM") === "September"
+                              ? data.otherco.map((d, index) => (
+                                  <p key={index}>{d.othercost}</p>
+                                ))
+                              : ""
                           )}
                         </td>
 
@@ -845,6 +1166,15 @@ const ExpenseReport = () => {
                               ""
                             )
                           )}
+                          {registrationdata.map((data) =>
+                            moment
+                              .unix(data.startdate.seconds)
+                              .format("MMMM") === "October"
+                              ? data.otherco.map((d, index) => (
+                                  <p key={index}>{d.otherfor}</p>
+                                ))
+                              : ""
+                          )}
                         </td>
                         <td>
                           {maintenancedata.map((data) =>
@@ -853,6 +1183,15 @@ const ExpenseReport = () => {
                             ) : (
                               ""
                             )
+                          )}
+                          {registrationdata.map((data) =>
+                            moment
+                              .unix(data.startdate.seconds)
+                              .format("MMMM") === "October"
+                              ? data.otherco.map((d, index) => (
+                                  <p key={index}>{d.othercost}</p>
+                                ))
+                              : ""
                           )}
                         </td>
 
@@ -868,6 +1207,15 @@ const ExpenseReport = () => {
                               ""
                             )
                           )}
+                          {registrationdata.map((data) =>
+                            moment
+                              .unix(data.startdate.seconds)
+                              .format("MMMM") === "November"
+                              ? data.otherco.map((d, index) => (
+                                  <p key={index}>{d.otherfor}</p>
+                                ))
+                              : ""
+                          )}
                         </td>
                         <td>
                           {maintenancedata.map((data) =>
@@ -876,6 +1224,15 @@ const ExpenseReport = () => {
                             ) : (
                               ""
                             )
+                          )}
+                          {registrationdata.map((data) =>
+                            moment
+                              .unix(data.startdate.seconds)
+                              .format("MMMM") === "November"
+                              ? data.otherco.map((d, index) => (
+                                  <p key={index}>{d.othercost}</p>
+                                ))
+                              : ""
                           )}
                         </td>
 
@@ -899,6 +1256,15 @@ const ExpenseReport = () => {
                             ) : (
                               ""
                             )
+                          )}
+                          {registrationdata.map((data) =>
+                            moment
+                              .unix(data.startdate.seconds)
+                              .format("MMMM") === "December"
+                              ? data.otherco.map((d, index) => (
+                                  <p key={index}>{d.othercost}</p>
+                                ))
+                              : ""
                           )}
                         </td>
 

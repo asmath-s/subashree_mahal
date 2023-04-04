@@ -13,7 +13,7 @@ import {
   doc,
 } from "firebase/firestore";
 
-import { Maintenancemodal, Monmaintenancemodal } from "components/popupform";
+import { Maintenancemodal } from "components/popupform";
 
 const MaintenanceDetails = () => {
   const [selectedyear, setSelectedyear] = useState("");
@@ -21,9 +21,6 @@ const MaintenanceDetails = () => {
 
   const [selecteddata, setSelecteddata] = useState([]);
   const [modalShow, setModalShow] = useState(false);
-  const [monselecteddata, setmonSelecteddata] = useState([]);
-
-  const [modalpopup, setModalpopup] = useState(false);
 
   const regData = async () => {
     const currentyear = new Date().getFullYear();
@@ -772,13 +769,6 @@ const MaintenanceDetails = () => {
                       show={modalShow}
                       onHide={() => setModalShow(false)}
                       dataselect={selecteddata}
-                    />
-                  ) : null}
-                  {modalpopup === true ? (
-                    <Monmaintenancemodal
-                      show={modalpopup}
-                      onHide={() => setModalpopup(false)}
-                      dataselect={monselecteddata}
                     />
                   ) : null}
                 </div>
