@@ -130,7 +130,7 @@ const EventReport = () => {
                 <div className="exprtbtn">
                   {role === "sadmin" ? (
                     <DownloadTableExcel
-                      filename="Registration Details"
+                      filename="Event Report Details"
                       sheet="users"
                       currentTableRef={tableRef.current}
                     >
@@ -238,7 +238,7 @@ const EventReport = () => {
                             <i className="fa fa-user"></i>
                           </td>
 
-                          <td>{data.customername}</td>
+                          <td> {data.customername}</td>
                           <td>{data.event}</td>
                           <td>
                             {moment
@@ -273,6 +273,10 @@ const EventReport = () => {
                           </td>
                           <td>{data.Balance}</td>
                           <td>
+                            <div style={{ display: "none" }}>
+                              {data.invoicecopy}
+                            </div>
+
                             <a target="_blank" href={data.invoicecopy}>
                               <i className="fa-solid fa-image"></i>
                             </a>
