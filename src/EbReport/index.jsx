@@ -377,7 +377,8 @@ export default function EBreport() {
                         <th scope="col">Constant Unit</th>
                         <th scope="col">Charge Unit</th>
                         <th scope="col">Total Unit</th>
-                        <th scope="col">Metercost</th>
+                        <th scope="col">Meter cost</th>
+                        <th scope="col">Generator Cost</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -406,6 +407,7 @@ export default function EBreport() {
                           <td>{data.chargeunit}</td>
                           <td>{data.totalunit}</td>
                           <td>{data.metercost}</td>
+                          <td>{data.Generatorcost}</td>
                         </tr>
                       ))}
                     </tbody>
