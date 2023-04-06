@@ -223,43 +223,53 @@ export default function EBreport() {
 
     const title = "EB Report";
     const headers = [
-      [
-        "Customer Name",
-        "Event",
-        "Starting Date",
-        "Ending Date",
-        "Days",
-        "Start Unit",
-        "End Unit",
-        "Constant Unit",
-        "Charge Unit",
-        "Total Unit",
-        "Metercost",
-      ],
+      "S.NO",
+      "Customer Name",
+      "Event",
+      "Starting Date",
+      "Ending Date",
+      "Days",
+      "Start Unit",
+      "End Unit",
+      "Constant Unit",
+      "Charge Unit",
+      "Total Unit",
+      "Metercost",
+      "Generator Cost",
     ];
+    const tableRows = [];
 
-    const data = ExpenseTableValues.map((elt) => [
-      elt.customerName,
-      elt.event,
-      elt.sDate,
-      elt.eDate,
-      elt.dayss,
-      elt.startunit,
-      elt.endunit,
-      elt.constantunit,
-      elt.chargeunit,
-      elt.totalunit,
-      elt.metercost,
-    ]);
+    registrationdata.forEach((item, index) => {
+      const rowData = [
+        index + 1,
+        item.customername,
+        item.event,
+        moment.unix(item.startdate.seconds).format("DD/MM/YYYY"),
+        moment.unix(item.enddate.seconds).format("DD/MM/YYYY"),
+        item.numberofdays,
+        item.startunit,
+        item.endunit,
+
+        item.constantunit,
+
+        item.chargeunit,
+
+        item.totalunit,
+
+        item.metercost,
+        item.Generatorcost,
+      ];
+      tableRows.push(rowData);
+    });
 
     let content = {
       startY: 50,
-      head: headers,
-      body: data,
+      head: [headers],
+      body: tableRows,
       theme: "grid",
     };
 
-    doc.text(title, marginLeft, 40);
+    doc.text(title, marginLeft, 20);
     doc.autoTable(content);
     doc.save("EB Report.pdf");
   };
