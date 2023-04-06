@@ -22,6 +22,9 @@ const RevenueReport = () => {
   const [totalCost, setTotalcost] = useState("");
   const [totalrerm, settotalrerm] = useState("");
 
+  const [pdfCount, setPdfCount] = useState("");
+  const val = "";
+
   const [Read, setRead] = useState("");
 
   const tableRef = useRef(null);
@@ -207,89 +210,92 @@ const RevenueReport = () => {
     }
   };
 
-  const ExpenseTableValues = [
-    {
-      customerName: cname,
-      events: events,
-      sDate: sDate,
-      eDate: eDate,
-      dayss: dayss,
-      rentalAmount: rentalAmount,
-      roomCost: roomCost,
-      unit: unit,
-      unitCost: unitCost,
-      cleaningPeople: cleaningPeople,
-      costPerPeople: costPerPeople,
-      cleaningCost: cleaningCost,
-      waterCost: waterCost,
-      generatorCost: generatorCost,
-      otherCost: otherCost,
-      totalAmount: totalAmount,
-    },
-  ];
-
-  const exportPDF = () => {
+  const generatePDF = () => {
     const unit = "pt";
     const size = "A4"; // Use A1, A2, A3 or A4
     const orientation = "landscape"; // portrait or landscape
 
     const marginLeft = 40;
     const doc = new jsPDF(orientation, unit, size);
-
     doc.setFontSize(15);
 
     const title = "Revenue Report";
-    const headers = [
-      [
-        "Customer Name",
-        "Event",
-        "Start Date",
-        "End Date",
-        "Days",
-        "Rental Amount",
-        "Room Cost",
-        "Unit",
-        "Unit Cost",
-        "Cleaning People",
-        "Cost Per People",
-        "Cleaning Cost",
-        "Water Cost",
-        "Generator Cost",
-        "Other Cost",
-        "Total Amount",
-      ],
+    const tableColumn = [
+      "S.NO",
+      "Customer Name",
+      "Event",
+      "Start Date",
+      "End Date",
+      "Days",
+      "Rental Amount",
+      "Room Cost",
+
+      "Generator Cost",
+
+      "Total Amount",
+    ];
+    const tableRows = [];
+    const test = [
+      "Total",
+      count,
+      "",
+      "",
+
+      "",
+
+      days,
+
+      revenue,
+
+      totalrerm,
+
+      "",
+      totalCost,
+
+      // item.age.toString(),
     ];
 
-    const data = ExpenseTableValues.map((elt) => [
-      elt.customerName,
-      elt.events,
-      elt.sDate,
-      elt.eDate,
-      elt.dayss,
-      elt.rentalAmount,
-      elt.roomCost,
-      elt.unit,
-      elt.unitCost,
-      elt.cleaningPeople,
-      elt.costPerPeople,
-      elt.cleaningCost,
-      elt.waterCost,
-      elt.generatorCost,
-      elt.otherCost,
-      elt.totalAmount,
-    ]);
+    registrationdata.forEach((item, index) => {
+      const amount = ff(item.rentalamnt, item.rooms);
 
+      const rowData = [
+        index + 1,
+        item.customername,
+        item.event,
+        moment.unix(item.startdate.seconds).format("DD/MM/YYYY"),
+
+        moment.unix(item.enddate.seconds).format("DD/MM/YYYY"),
+
+        item.numberofdays,
+
+        item.rentalamnt,
+        item.rooms.map((room, index) => room.room + "-" + room.roomcost),
+
+        item.Generatorcost,
+
+        amount.props.children,
+
+        // item.age.toString(),
+      ];
+
+      tableRows.push(rowData);
+      console.log("rowData", rowData);
+    });
+
+    tableRows.push(test);
     let content = {
       startY: 50,
-      head: headers,
-      body: data,
+      head: [tableColumn],
+      body: tableRows,
+
       theme: "grid",
     };
 
-    doc.text(title, marginLeft, 40);
     doc.autoTable(content);
+    doc.text(title, marginLeft, 40);
     doc.save("Expense Report.pdf");
   };
+
   return (
     <div id="layout-wrapper">
       <Header />
@@ -324,7 +330,7 @@ const RevenueReport = () => {
                       borderColor: "#0a408f",
                       border: "1px solid #0a408f",
                     }}
-                    onClick={() => exportPDF()}
+                    onClick={() => generatePDF()}
                   >
                     {" "}
                     Export PDF
