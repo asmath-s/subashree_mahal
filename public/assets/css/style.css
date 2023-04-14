@@ -875,3 +875,11 @@ input[type="number"] {
   justify-content: space-between;
   align-items: center;
 }
+
+.tableheading {
+  width: max-content;
+  font-weight: 600;
+  margin-bottom: 20px !important;
+  color: #0a408f;
+  margin-top: 20px;
+}

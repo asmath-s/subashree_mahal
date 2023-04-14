@@ -9,6 +9,7 @@ import { DownloadTableExcel } from "react-export-table-to-excel";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 import moment from "moment";
+import ReactToPrint from "react-to-print";
 
 const ExpenseReport = () => {
   const [selectedyear, setSelectedyear] = useState("");
@@ -81,158 +82,7 @@ const ExpenseReport = () => {
   const [maintDataLength, setMaintDataLength] = useState("");
 
   const tableRef = useRef(null);
-
-  const ExpenseTableValues = [
-    {
-      e1month: "January",
-      e2maintenanceFor: janmfor,
-      e3maintenanceCost: janmcost,
-
-      e5total: January,
-    },
-    {
-      e1month: "Feburary",
-      e2maintenanceFor: Febmfor,
-      e3maintenanceCost: Febmcost,
-
-      e5total: Feburary,
-    },
-    {
-      e1month: "March",
-      e2maintenanceFor: Marmfor,
-      e3maintenanceCost: Marmcost,
-
-      e5total: March,
-    },
-
-    {
-      e1month: "April",
-      e2maintenanceFor: Aprmfor,
-      e3maintenanceCost: Aprmcost,
-
-      e5total: April,
-    },
-
-    {
-      e1month: "May",
-      e2maintenanceFor: Maymfor,
-      e3maintenanceCost: Maycost,
-
-      e5total: May,
-    },
-    {
-      e1month: "June",
-      e2maintenanceFor: Junmfor,
-      e3maintenanceCost: Juncost,
-
-      e5total: June,
-    },
-    {
-      e1month: "July",
-      e2maintenanceFor: Julmfor,
-      e3maintenanceCost: Julcost,
-
-      e5total: July,
-    },
-    {
-      e1month: "August",
-      e2maintenanceFor: Augmfor,
-      e3maintenanceCost: Augcost,
-
-      e5total: August,
-    },
-    {
-      e1month: "September",
-      e2maintenanceFor: Sepmfor,
-      e3maintenanceCost: Sepcost,
-
-      e5total: September,
-    },
-    {
-      e1month: "October",
-      e2maintenanceFor: Octmfor,
-      e3maintenanceCost: Octcost,
-
-      e5total: October,
-    },
-    {
-      e1month: "November",
-      e2maintenanceFor: Novmfor,
-      e3maintenanceCost: Novcost,
-
-      e5total: November,
-    },
-    {
-      e1month: "December",
-      e2maintenanceFor: Decmfor,
-      e3maintenanceCost: Deccost,
-
-      e5total: December,
-    },
-    {
-      e1month: "Total",
-      e2maintenanceFor: "",
-      e3maintenanceCost: totalmaincost,
-    },
-  ];
-
-  // const printpdf = () => {
-  //   const doc = new jsPDF();
-  //   doc.autoTable({ html: "#my-table" });
-  //   doc.save("table.pdf");
-  // };
-
-  console.log("selectedyear", selectedyear);
-  console.log("maintDataLength", maintDataLength);
-
-  const exportPDF = () => {
-    const unit = "pt";
-    const size = "A4"; // Use A1, A2, A3 or A4
-    const orientation = "portrait"; // portrait or landscape
-
-    const marginLeft = 40;
-    const doc = new jsPDF(orientation, unit, size);
-
-    doc.setFontSize(15);
-
-    const title = "Expense Report";
-    const headers = [
-      [
-        "Month",
-        "Maintenance For",
-        "Maintenance Cost",
-        "Monthly Maintenance Cost",
-        "Total",
-      ],
-    ];
-
-    const data = ExpenseTableValues.map((elt) => [
-      elt.e1month,
-      elt.e2maintenanceFor,
-      elt.e3maintenanceCost,
-      elt.e4monthlyMaintenanceCost,
-      elt.e5total,
-    ]);
-
-    let content = {
-      startY: 50,
-      head: headers,
-      body: data,
-      theme: "grid",
-    };
-
-    doc.text(title, marginLeft, 40);
-    doc.autoTable(content);
-    doc.save("Expense Report.pdf");
-  };
-
-  // const pdfPrint = () => {
-  //   var printContents = document.getElementById("printDiv").innerHTML;
-  //   var originalContents = document.body.innerHTML;
-  //   document.body.innerHTML = printContents;
-  //   window.print();
-  //   document.body.innerHTML = originalContents;
-  // };
+  const currentyearTable = new Date().getFullYear();
 
   const regData = async () => {
     const currentyear = new Date().getFullYear();
@@ -269,7 +119,7 @@ const ExpenseReport = () => {
         snapshot.docs.forEach((doc) => {
           regdata.push({ ...doc.data(), id: doc.id });
         });
-        console.log(regdata);
+        console.log("regdata", regdata);
         setRegistrationData(regdata);
       });
     } else {
@@ -303,7 +153,8 @@ const ExpenseReport = () => {
         snapshot.docs.forEach((doc) => {
           regdata.push({ ...doc.data(), id: doc.id });
         });
-        console.log(regdata);
+        console.log("regdata", regdata);
+
         setRegistrationData(regdata);
       });
     }
@@ -767,17 +618,26 @@ const ExpenseReport = () => {
                       Export Excel
                     </button>
                   </DownloadTableExcel>
-                  <button
-                    style={{
-                      backgroundColor: "#0a408f",
-                      color: "#fff",
-                      borderColor: "#0a408f",
-                      border: "1px solid #0a408f",
-                    }}
-                    onClick={() => exportPDF()}
-                  >
-                    Export PDF
-                  </button>
+
+                  <ReactToPrint
+                    trigger={
+                      () => (
+                        <button
+                          style={{
+                            backgroundColor: "#0a408f",
+                            color: "#fff",
+                            borderColor: "#0a408f",
+                            border: "1px solid #0a408f",
+                          }}
+                          // onClick={() => exportPDF()}
+                        >
+                          Export PDF
+                        </button>
+                      )
+                      // <button>Export to PDF</button>
+                    }
+                    content={() => tableRef.current}
+                  />
                 </div>
 
                 <div className="row">
@@ -799,8 +659,26 @@ const ExpenseReport = () => {
                   className="table-responsive table-card"
                   style={{ marginTop: "30px" }}
                 >
-                  <table className="table table-bordered gaptab" ref={tableRef}>
+                  <table
+                    id="my-table"
+                    className="table table-bordered gaptab"
+                    ref={tableRef}
+                  >
                     <thead>
+                      {selectedyear === "" ? (
+                        <tr>
+                          <p className="tableheading">
+                            Maintenance Report for {currentyearTable}
+                          </p>
+                        </tr>
+                      ) : (
+                        <tr>
+                          <p className="tableheading">
+                            Maintenance Report for {selectedyear}
+                          </p>
+                        </tr>
+                      )}
+
                       <tr>
                         <th>Month</th>
                         <th>Maintenance For</th>
