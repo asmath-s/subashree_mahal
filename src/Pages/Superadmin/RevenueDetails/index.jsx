@@ -1,4 +1,3 @@
-/* eslint-disable */
 import React, { useState, useEffect, useRef } from "react";
 import Header from "components/Header";
 import db from "../../../firebase";
@@ -17,14 +16,14 @@ const RevenueReport = () => {
   const [count, setCount] = useState("");
   const [revenue, setrevenue] = useState("");
   const [days, setDays] = useState("");
-  const [totalunit, setTotalunit] = useState("");
-  const [totalcleaning, setTotalcleaning] = useState("");
-  const [totalwater, setTotalwater] = useState("");
+
   const [totalgenerator, setTotalgenerator] = useState("");
-  const [totalother, setTotalother] = useState("");
+
   const [totalCost, setTotalcost] = useState("");
   const [totalrerm, settotalrerm] = useState("");
-  const [totaladv, settotaladv] = useState("");
+
+  const [pdfCount, setPdfCount] = useState("");
+  const val = "";
 
   const [Read, setRead] = useState("");
 
@@ -56,8 +55,8 @@ const RevenueReport = () => {
         snapshot.docs.forEach((doc) => {
           regdata.push({ ...doc.data(), id: doc.id });
         });
-
-        setRegistrationData(regdata);
+        const regstrationdata = regdata.reverse();
+        setRegistrationData(regstrationdata);
         regdata.map(
           (data) => (
             setCname(data.customername),
@@ -68,10 +67,7 @@ const RevenueReport = () => {
             setrentalAmount(data.rentalamnt)
           )
         );
-        console.log(
-          "regdata.customername",
-          regdata.map((data) => data.customername)
-        );
+
         // setCname(regdata.map((data) => data.customername));
         // setevents(regdata.map((data) => data.event));
 
@@ -83,16 +79,9 @@ const RevenueReport = () => {
 
         // setrentalAmount(regdata.map((data) => data.rentalamnt));
 
-        console.log(
-          "roomTotal",
-          regdata.map((room) =>
-            room.rooms.map((data) => data.room + "-" + data.roomcost)
-          )
-        );
-
         setroomCost(
-          regdata.map((room) =>
-            room.rooms.map((data) => data.room + "-" + data.roomcost)
+          regdata.map((data) =>
+            data.rooms.map((data) => data.room + "-" + data.roomcost)
           )
         );
 
@@ -110,13 +99,6 @@ const RevenueReport = () => {
 
         setgeneratorCost(regdata.map((data) => data.Generatorcost));
 
-        console.log(
-          "othercost",
-          regdata.map((cost) =>
-            cost.otherco.map((data) => data.otherfor + "-" + data.othercost)
-          )
-        );
-
         setotherCost(
           regdata.map((cost) =>
             cost.otherco.map((data) => data.otherfor + "-" + data.othercost)
@@ -127,47 +109,24 @@ const RevenueReport = () => {
 
         let totalrevenue = 0;
         let totaldays = 0;
-        let totalunit = 0;
-        let totalcleaningcost = 0;
-        let totalwatercost = 0;
-        let totalgeneratorcost = 0;
-        let totalothercost = 0;
         let totalrero = 0;
-        let totaladv = 0;
-
         regdata.forEach((data) => {
-          data.otherco.forEach((data) => {
-            totalothercost += parseInt(data.othercost);
-          });
           totalrevenue += parseInt(data.rentalamnt);
-          totalrero += parseInt(data.totalamount);
-          totaladv += parseInt(data.advanceamount);
+          data.rooms.forEach((room) => {
+            if (room.roomcost !== "") {
+              totalrero += parseInt(room.roomcost);
+            }
+          });
           totaldays += parseInt(data.numberofdays);
-          totalunit += parseInt(data.metercost);
-          totalcleaningcost += parseInt(data.cleaningcost);
-          totalwatercost += parseInt(data.watercost);
-          totalgeneratorcost += parseInt(data.Generatorcost);
         });
 
-        const totalcalc =
-          totalrero +
-          totalunit +
-          totalcleaningcost +
-          totalwatercost +
-          totalgeneratorcost +
-          totalothercost;
+        const totalcalc = totalrevenue + totalrero;
 
         setTotalcost(totalcalc);
-        settotaladv(totaladv);
         settotalrerm(totalrero);
-        setTotalother(totalothercost);
         setCount(regdata.length);
         setrevenue(totalrevenue);
         setDays(totaldays);
-        setTotalunit(totalunit);
-        setTotalcleaning(totalcleaningcost);
-        setTotalwater(totalwatercost);
-        setTotalgenerator(totalgeneratorcost);
       });
     } else {
       const regsiterdata = collection(db, "registration");
@@ -185,46 +144,32 @@ const RevenueReport = () => {
         setRegistrationData(regdata);
         let totalrevenue = 0;
         let totaldays = 0;
-        let totalunit = 0;
-        let totalcleaningcost = 0;
-        let totalwatercost = 0;
         let totalgeneratorcost = 0;
         let totalothercost = 0;
         let totalrero = 0;
-        let totaladv = 0;
 
         regdata.forEach((data) => {
           data.otherco.forEach((data) => {
-            totalothercost += parseInt(data.othercost);
+            if (data.othercost !== "") {
+              totalothercost += parseInt(data.othercost);
+            }
           });
+
           totalrevenue += parseInt(data.rentalamnt);
           totalrero += parseInt(data.totalamount);
-          totaladv += parseInt(data.advanceamount);
+
           totaldays += parseInt(data.numberofdays);
-          totalunit += parseInt(data.metercost);
-          totalcleaningcost += parseInt(data.cleaningcost);
-          totalwatercost += parseInt(data.watercost);
+
           totalgeneratorcost += parseInt(data.Generatorcost);
         });
 
-        const totalcalc =
-          totalrero +
-          totalunit +
-          totalcleaningcost +
-          totalwatercost +
-          totalgeneratorcost +
-          totalothercost;
+        const totalcalc = totalrevenue + totalothercost;
 
         setTotalcost(totalcalc);
-        settotaladv(totaladv);
         settotalrerm(totalrero);
-        setTotalother(totalothercost);
         setCount(regdata.length);
         setrevenue(totalrevenue);
         setDays(totaldays);
-        setTotalunit(totalunit);
-        setTotalcleaning(totalcleaningcost);
-        setTotalwater(totalwatercost);
         setTotalgenerator(totalgeneratorcost);
       });
     }
@@ -235,18 +180,21 @@ const RevenueReport = () => {
   };
   useEffect(() => {
     window.scrollTo(0, 0);
-    console.log("ExpenseTableValues", ExpenseTableValues);
   }, []);
   useEffect(() => {
     regData();
   }, [startDate, endDate]);
 
-  const ff = (to, me, cl, wa, ge, ot) => {
-    const sum1 =
-      parseInt(to) + parseInt(me) + parseInt(cl) + parseInt(wa) + parseInt(ge);
+  const ff = (re, ro, ot) => {
+    const sum1 = parseInt(re);
     let sum2 = 0;
-    ot.forEach((dt) => (sum2 += parseInt(dt.othercost)));
-    return <>{sum1 + sum2}</>;
+    ro.forEach((room) => {
+      if (room.roomcost !== "") {
+        sum2 += parseInt(room.roomcost);
+      }
+    });
+
+    return <>{sum2 + sum1}</>;
   };
 
   // search data in table
@@ -262,89 +210,92 @@ const RevenueReport = () => {
     }
   };
 
-  const ExpenseTableValues = [
-    {
-      customerName: cname,
-      events: events,
-      sDate: sDate,
-      eDate: eDate,
-      dayss: dayss,
-      rentalAmount: rentalAmount,
-      roomCost: roomCost,
-      unit: unit,
-      unitCost: unitCost,
-      cleaningPeople: cleaningPeople,
-      costPerPeople: costPerPeople,
-      cleaningCost: cleaningCost,
-      waterCost: waterCost,
-      generatorCost: generatorCost,
-      otherCost: otherCost,
-      totalAmount: totalAmount,
-    },
-  ];
-
-  const exportPDF = () => {
+  const generatePDF = () => {
     const unit = "pt";
     const size = "A4"; // Use A1, A2, A3 or A4
     const orientation = "landscape"; // portrait or landscape
 
     const marginLeft = 40;
     const doc = new jsPDF(orientation, unit, size);
-
     doc.setFontSize(15);
 
     const title = "Revenue Report";
-    const headers = [
-      [
-        "Customer Name",
-        "Event",
-        "Start Date",
-        "End Date",
-        "Days",
-        "Rental Amount",
-        "Room Cost",
-        "Unit",
-        "Unit Cost",
-        "Cleaning People",
-        "Cost Per People",
-        "Cleaning Cost",
-        "Water Cost",
-        "Generator Cost",
-        "Other Cost",
-        "Total Amount",
-      ],
+    const tableColumn = [
+      "S.NO",
+      "Customer Name",
+      "Event",
+      "Start Date",
+      "End Date",
+      "Days",
+      "Rental Amount",
+      "Room Cost",
+
+      "Generator Cost",
+
+      "Total Amount",
+    ];
+    const tableRows = [];
+    const test = [
+      "Total",
+      count,
+      "",
+      "",
+
+      "",
+
+      days,
+
+      revenue,
+
+      totalrerm,
+
+      "",
+      totalCost,
+
+      // item.age.toString(),
     ];
 
-    const data = ExpenseTableValues.map((elt) => [
-      elt.customerName,
-      elt.events,
-      elt.sDate,
-      elt.eDate,
-      elt.dayss,
-      elt.rentalAmount,
-      elt.roomCost,
-      elt.unit,
-      elt.unitCost,
-      elt.cleaningPeople,
-      elt.costPerPeople,
-      elt.cleaningCost,
-      elt.waterCost,
-      elt.generatorCost,
-      elt.otherCost,
-      elt.totalAmount,
-    ]);
+    registrationdata.forEach((item, index) => {
+      const amount = ff(item.rentalamnt, item.rooms);
 
+      const rowData = [
+        index + 1,
+        item.customername,
+        item.event,
+        moment.unix(item.startdate.seconds).format("DD/MM/YYYY"),
+
+        moment.unix(item.enddate.seconds).format("DD/MM/YYYY"),
+
+        item.numberofdays,
+
+        item.rentalamnt,
+        item.rooms.map((room, index) => room.room + "-" + room.roomcost),
+
+        item.Generatorcost,
+
+        amount.props.children,
+
+        // item.age.toString(),
+      ];
+
+      tableRows.push(rowData);
+      console.log("rowData", rowData);
+    });
+
+    tableRows.push(test);
     let content = {
       startY: 50,
-      head: headers,
-      body: data,
+      head: [tableColumn],
+      body: tableRows,
+
       theme: "grid",
     };
 
-    doc.text(title, marginLeft, 40);
     doc.autoTable(content);
+    doc.text(title, marginLeft, 40);
     doc.save("Expense Report.pdf");
   };
+
   return (
     <div id="layout-wrapper">
       <Header />
@@ -379,7 +330,7 @@ const RevenueReport = () => {
                       borderColor: "#0a408f",
                       border: "1px solid #0a408f",
                     }}
-                    onClick={() => exportPDF()}
+                    onClick={() => generatePDF()}
                   >
                     {" "}
                     Export PDF
@@ -445,14 +396,7 @@ const RevenueReport = () => {
                         <th>Days</th>
                         <th>Rental Amount</th>
                         <th>room Cost</th>
-                        <th>Unit</th>
-                        <th>Unit Cost</th>
-                        <th>Cleaning People</th>
-                        <th>Cost Per People</th>
-                        <th>Cleaning Cost</th>
-                        <th>Water Cost</th>
                         <th>Generator Cost</th>
-                        <th>Other Cost</th>
                         <th>Total Amount</th>
                       </tr>
                     </thead>
@@ -482,31 +426,8 @@ const RevenueReport = () => {
                             ))}
                           </td>
 
-                          <td>{data.totalunit}</td>
-                          <td>{data.metercost}</td>
-                          <td>{data.cleaningpeople}</td>
-                          <td>{data.cleaningcostper}</td>
-                          <td>{data.cleaningcost}</td>
-                          <td>{data.watercost}</td>
                           <td>{data.Generatorcost}</td>
-                          <td>
-                            {data.otherco.map((data, index) => (
-                              <div key={index}>
-                                {data.otherfor}-{data.othercost}
-                              </div>
-                            ))}
-                          </td>
-                          <td>
-                            {ff(
-                              data.totalamount,
-
-                              data.metercost,
-                              data.cleaningcost,
-                              data.watercost,
-                              data.Generatorcost,
-                              data.otherco
-                            )}
-                          </td>
+                          <td>{ff(data.rentalamnt, data.rooms)}</td>
                         </tr>
                       ))}
                       <tr className="totalcount">
@@ -519,13 +440,6 @@ const RevenueReport = () => {
                         <td>{revenue}</td>
                         <td>{totalrerm}</td>
                         <td></td>
-                        <td>{totalunit}</td>
-                        <td></td>
-                        <td></td>
-                        <td>{totalcleaning}</td>
-                        <td>{totalwater}</td>
-                        <td>{totalgenerator}</td>
-                        <td>{totalother}</td>
                         <td>{totalCost}</td>
                       </tr>
                     </tbody>

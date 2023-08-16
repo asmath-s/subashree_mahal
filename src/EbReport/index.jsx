@@ -51,7 +51,11 @@ export default function EBreport() {
   const regData = () => {
     if (startDate === "" && endDate === "") {
       const regsiterdata = collection(db, "registration");
-      const q = query(regsiterdata, where("finished", "==", true));
+      const q = query(
+        regsiterdata,
+        where("finished", "==", true),
+        where("year", "==", new Date().getFullYear())
+      );
       onSnapshot(q, (snapshot) => {
         let regdata = [];
         snapshot.docs.forEach((doc) => {
@@ -219,43 +223,53 @@ export default function EBreport() {
 
     const title = "EB Report";
     const headers = [
-      [
-        "Customer Name",
-        "Event",
-        "Starting Date",
-        "Ending Date",
-        "Days",
-        "Start Unit",
-        "End Unit",
-        "Constant Unit",
-        "Charge Unit",
-        "Total Unit",
-        "Metercost",
-      ],
+      "S.NO",
+      "Customer Name",
+      "Event",
+      "Starting Date",
+      "Ending Date",
+      "Days",
+      "Start Unit",
+      "End Unit",
+      "Constant Unit",
+      "Charge Unit",
+      "Total Unit",
+      "Metercost",
+      "Generator Cost",
     ];
+    const tableRows = [];
 
-    const data = ExpenseTableValues.map((elt) => [
-      elt.customerName,
-      elt.event,
-      elt.sDate,
-      elt.eDate,
-      elt.dayss,
-      elt.startunit,
-      elt.endunit,
-      elt.constantunit,
-      elt.chargeunit,
-      elt.totalunit,
-      elt.metercost,
-    ]);
+    registrationdata.forEach((item, index) => {
+      const rowData = [
+        index + 1,
+        item.customername,
+        item.event,
+        moment.unix(item.startdate.seconds).format("DD/MM/YYYY"),
+        moment.unix(item.enddate.seconds).format("DD/MM/YYYY"),
+        item.numberofdays,
+        item.startunit,
+        item.endunit,
+
+        item.constantunit,
+
+        item.chargeunit,
+
+        item.totalunit,
+
+        item.metercost,
+        item.Generatorcost,
+      ];
+      tableRows.push(rowData);
+    });
 
     let content = {
       startY: 50,
-      head: headers,
-      body: data,
+      head: [headers],
+      body: tableRows,
       theme: "grid",
     };
 
-    doc.text(title, marginLeft, 40);
+    doc.text(title, marginLeft, 20);
     doc.autoTable(content);
     doc.save("EB Report.pdf");
   };
@@ -373,7 +387,8 @@ export default function EBreport() {
                         <th scope="col">Constant Unit</th>
                         <th scope="col">Charge Unit</th>
                         <th scope="col">Total Unit</th>
-                        <th scope="col">Metercost</th>
+                        <th scope="col">Meter cost</th>
+                        <th scope="col">Generator Cost</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -388,12 +403,12 @@ export default function EBreport() {
                           <td>
                             {moment
                               .unix(data.startdate.seconds)
-                              .format("MM/DD/YYYY")}
+                              .format("DD/MM/YYYY")}
                           </td>
                           <td>
                             {moment
                               .unix(data.enddate.seconds)
-                              .format("MM/DD/YYYY")}
+                              .format("DD/MM/YYYY")}
                           </td>
                           <td>{data.numberofdays}</td>
                           <td>{data.startunit}</td>
@@ -402,6 +417,7 @@ export default function EBreport() {
                           <td>{data.chargeunit}</td>
                           <td>{data.totalunit}</td>
                           <td>{data.metercost}</td>
+                          <td>{data.Generatorcost}</td>
                         </tr>
                       ))}
                     </tbody>

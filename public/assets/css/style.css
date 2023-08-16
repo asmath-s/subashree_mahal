@@ -569,7 +569,17 @@ input[type="number"] {
 .eventInactive {
   opacity: 1 !important;
 }
-
+.dflex {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+.dflexinside {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
 /*======================
     404 page
 =======================*/
@@ -864,4 +874,12 @@ input[type="number"] {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.tableheading {
+  width: max-content;
+  font-weight: 600;
+  margin-bottom: 20px !important;
+  color: #0a408f;
+  margin-top: 20px;
 }

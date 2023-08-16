@@ -1,10 +1,11 @@
-/* eslint-disable */
 import React, { useEffect, useState, useRef } from "react";
 import Header from "components/Header";
 import db from "../../../firebase";
 import {
   collection,
   onSnapshot,
+  deleteDoc,
+  doc,
   orderBy,
   query,
   where,
@@ -16,6 +17,7 @@ import Form from "react-bootstrap/Form";
 
 import DatePicker from "react-datepicker";
 import { DownloadTableExcel } from "react-export-table-to-excel";
+import Swal from "sweetalert2";
 
 const EventReport = () => {
   const [registrationdata, setRegistrationData] = useState([]);
@@ -38,13 +40,17 @@ const EventReport = () => {
   const regData = () => {
     if (startDate === "" && endDate === "") {
       const regsiterdata = collection(db, "registration");
-      const q = query(regsiterdata, where("finished", "==", true));
+      const q = query(
+        regsiterdata,
+        where("finished", "==", true),
+        where("year", "==", new Date().getFullYear())
+      );
       onSnapshot(q, (snapshot) => {
         let regdata = [];
         snapshot.docs.forEach((doc) => {
           regdata.push({ ...doc.data(), id: doc.id });
         });
-        setRegistrationData(regdata);
+        setRegistrationData(regdata.reverse());
       });
     } else {
       const regsiterdata = collection(db, "registration");
@@ -82,12 +88,34 @@ const EventReport = () => {
       const filterdata = registrationdata.filter((data) => {
         return data.customername.toLowerCase().indexOf(search) !== -1;
       });
+
       setRegistrationData(filterdata);
     }
   };
   const handleClear = () => {
     setStartDate("");
     setendDate("");
+  };
+
+  const DeleteFunction = (data) => {
+    Swal.fire({
+      title: "Permanently Delete",
+      text: "You won't be able to recover this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.value) {
+        deleteDoc(doc(db, "registration", data.id));
+        Swal.fire("Deleted!", "Your data has been deleted.", "success");
+
+        regData();
+      } else {
+        Swal.fire("Cancelled", "Your file is safe :)", "error");
+      }
+    });
   };
 
   return (
@@ -102,7 +130,7 @@ const EventReport = () => {
                 <div className="exprtbtn">
                   {role === "sadmin" ? (
                     <DownloadTableExcel
-                      filename="Registration Details"
+                      filename="Event Report Details"
                       sheet="users"
                       currentTableRef={tableRef.current}
                     >
@@ -200,6 +228,7 @@ const EventReport = () => {
                         <th scope="col">Balance</th>
                         <th scope="col">Invoice Copy</th>
                         <th scope="col"></th>
+                        <th scope="col"></th>
                       </tr>
                     </thead>
                     <tbody>
@@ -209,17 +238,17 @@ const EventReport = () => {
                             <i className="fa fa-user"></i>
                           </td>
 
-                          <td>{data.customername}</td>
+                          <td> {data.customername}</td>
                           <td>{data.event}</td>
                           <td>
                             {moment
                               .unix(data.startdate.seconds)
-                              .format("MM/DD/YYYY")}
+                              .format("DD/MM/YYYY")}
                           </td>
                           <td>
                             {moment
                               .unix(data.enddate.seconds)
-                              .format("MM/DD/YYYY")}
+                              .format("DD/MM/YYYY")}
                           </td>
                           <td>{data.numberofdays}</td>
                           <td>{data.totalamount}</td>
@@ -244,12 +273,19 @@ const EventReport = () => {
                           </td>
                           <td>{data.Balance}</td>
                           <td>
+                            <div style={{ display: "none" }}>
+                              {data.invoicecopy}
+                            </div>
+
                             <a target="_blank" href={data.invoicecopy}>
                               <i className="fa-solid fa-image"></i>
                             </a>
                           </td>
                           <td onClick={() => EditFunction(data)}>
                             <i className="fa fa-edit"></i>
+                          </td>
+                          <td onClick={() => DeleteFunction(data)}>
+                            <i className="fa fa-trash"></i>
                           </td>
                         </tr>
                       ))}
