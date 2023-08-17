@@ -18,6 +18,8 @@ const SaDashboard = () => {
   const [count, setCount] = useState("");
   const [expense, setExpense] = useState(0);
   const [revenue, setRevenue] = useState(0);
+  const [revenuePerYear, setRevenuePerYear] = useState(0);
+
   const [totalmaincost, setTotalmaincost] = useState("");
   const [montotalmaincost, setTotalmonmaincost] = useState("");
   const [reviewsData, setreviewsData] = useState([]);
@@ -103,6 +105,39 @@ const SaDashboard = () => {
       let totalothercost = 0;
       let totalrero = 0;
 
+      // const tAmt = regdata.map((data) => data.totalamount);
+      // const sum = tAmt.reduce(
+      //   (accumulator, currentValue) => accumulator + currentValue,
+      //   0
+      // );
+      console.log("regdata", regdata);
+
+      const roomCost = regdata.map((data) => {
+        const cost = data.rooms[0].roomcost;
+        return cost === "" ? 0 : parseInt(cost);
+      });
+
+      console.log("roomCost", roomCost);
+
+      const roomCostTotal = roomCost.reduce(
+        (accumulator, currentValue) => accumulator + currentValue,
+        0
+      );
+
+      const tAmt = regdata.map((data) => parseInt(data.totalamount)); // Convert strings to integers
+
+      const total = tAmt.reduce(
+        (accumulator, currentValue) => accumulator + currentValue,
+        0
+      );
+
+      const revenueData = total + roomCostTotal;
+      setRevenuePerYear(revenueData);
+
+      console.log("total", total);
+
+      console.log("roomCostTotal", roomCostTotal);
+
       regdata.forEach((data) => {
         data.otherco.forEach((data) => {
           totalothercost += parseInt(data.othercost);
@@ -187,8 +222,8 @@ const SaDashboard = () => {
                   >
                     <div className="generalbox "></div>
                     <div className="leftspace">
-                      <h6>Total Income /yr</h6>
-                      <h1 className="redtext">{revenue}</h1>
+                      <h6>Total Revenue Income /yr</h6>
+                      <h1 className="redtext">{revenuePerYear}</h1>
                     </div>
                   </div>
                 </div>
@@ -199,7 +234,7 @@ const SaDashboard = () => {
                   >
                     <div className="generalbox "></div>
                     <div className="leftspace">
-                      <h6>Total Expense /yr</h6>
+                      <h6>Total Maintenance Amount/yr</h6>
                       <h1 className="redtext">{expense}</h1>
                     </div>
                   </div>
