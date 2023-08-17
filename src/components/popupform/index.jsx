@@ -78,15 +78,15 @@ const ModalForm = (props) => {
   };
 
   // select event on change
-  const handleEventChange = (e) => {
-    if (e.target.value === "other") {
-      document.getElementById("otherevent").style.display = "flex";
-      setEvent("");
-    } else {
-      document.getElementById("otherevent").style.display = "none";
-      setEvent(e.target.value);
-    }
-  };
+  // const handleEventChange = (e) => {
+  //   if (e.target.value === "other") {
+  //     document.getElementById("otherevent").style.display = "flex";
+  //     setEvent("");
+  //   } else {
+  //     document.getElementById("otherevent").style.display = "none";
+  //     setEvent(e.target.value);
+  //   }
+  // };
 
   // multiple select fields for halls
   const handleHallsChange = (e) => {

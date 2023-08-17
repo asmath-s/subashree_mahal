@@ -382,11 +382,14 @@ export default function EBreport() {
                         <th scope="col">Starting Date</th>
                         <th scope="col">Ending Date</th>
                         <th scope="col">Days</th>
-                        <th scope="col">Start Unit</th>
-                        <th scope="col">End Unit</th>
                         <th scope="col">Constant Unit</th>
-                        <th scope="col">Charge Unit</th>
+                        <th scope="col">Start Unit</th>
+                        <th scope="col">Total Start Unit </th>
+                        <th scope="col">End Unit</th>
+                        <th scope="col">Total End Unit</th>
                         <th scope="col">Total Unit</th>
+                        <th scope="col">Charge per Unit</th>
+
                         <th scope="col">Meter cost</th>
                         <th scope="col">Generator Cost</th>
                       </tr>
@@ -411,12 +414,30 @@ export default function EBreport() {
                               .format("DD/MM/YYYY")}
                           </td>
                           <td>{data.numberofdays}</td>
-                          <td>{data.startunit}</td>
-                          <td>{data.endunit}</td>
                           <td>{data.constantunit}</td>
+                          <td>{data.startunit}</td>
+                          <td>{data.constantunit * data.startunit}</td>
+                          <td>{data.endunit}</td>
+                          <td>{data.constantunit * data.endunit}</td>
+                          <td>
+                            {parseFloat(
+                              (
+                                data.constantunit * data.endunit -
+                                data.constantunit * data.startunit
+                              ).toFixed(2)
+                            )}
+                          </td>
                           <td>{data.chargeunit}</td>
-                          <td>{data.totalunit}</td>
-                          <td>{data.metercost}</td>
+                          <td>
+                            {(
+                              parseFloat(
+                                (
+                                  data.constantunit * data.endunit -
+                                  data.constantunit * data.startunit
+                                ).toFixed(2)
+                              ) * data.chargeunit
+                            ).toFixed(2)}
+                          </td>
                           <td>{data.Generatorcost}</td>
                         </tr>
                       ))}

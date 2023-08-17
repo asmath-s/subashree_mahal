@@ -7,7 +7,7 @@ import { collection, onSnapshot, query, where } from "firebase/firestore";
 const Header = () => {
   const [loggedIn, setLoggedIn] = useState(true);
   const [username, setusername] = useState(true);
-  const [user, setuser] = useState([]);
+  // const [user, setuser] = useState([]);
   const [dashboard, setdashboard] = useState(false);
   const [bookingDetails, setbookingDetails] = useState(false);
   const [bookingEntry, setbookingEntry] = useState(false);
@@ -34,7 +34,7 @@ const Header = () => {
       snapshot.docs.forEach((doc) => {
         userdata.push({ ...doc.data(), id: doc.id });
       });
-      setuser(userdata);
+      // setuser(userdata);
       setdashboard(userdata[0].dashboard);
       setbookingDetails(userdata[0].bookingDetails);
       setbookingEntry(userdata[0].bookingEntry);
